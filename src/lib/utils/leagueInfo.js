@@ -7,7 +7,8 @@ export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VI
 
 /*   STEP 2   */
 export const homepageText = `
-  <h1>Welcome to 2024 NFL Fantasy Year. Draft Day is Aug. 25th at 8 pm</h1>
+  <h3>Welcome to 2024 NFL Fantasy Year.</h3> 
+  <p>Draft Day is Aug. 25th at 8 pm</p>
   <p><a href="https://docs.google.com/spreadsheets/d/1-ALHgmmSbmSEQYc8Em3M4QCZMfMTTOOcKs2vQJFGPPk/edit?pli=1&gid=512874293#gid=512874293">Link to the Sheets</a></p>
 `;
 
