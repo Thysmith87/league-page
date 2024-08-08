@@ -78,4 +78,9 @@ export const tabs = [
         label: 'Resources',
         dest: '/resources',
     },
+        {
+        icon: 'table',
+        label: 'Keeper Sheet',
+        dest: 'https://docs.google.com/spreadsheets/d/1-ALHgmmSbmSEQYc8Em3M4QCZMfMTTOOcKs2vQJFGPPk/edit#gid=512874293',
+    },
 ];
