@@ -8,6 +8,12 @@ export const tabs = [
         key: 'home',
     },
     {
+        icon: 'recent_actors',
+        label: 'Keepers',
+        dest: '/keepers',
+        key: 'keepers',
+    },
+    {
         icon: 'sports',
         label: 'Matchups',
         dest: '/matchups',
