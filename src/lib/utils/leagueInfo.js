@@ -1,9 +1,11 @@
 /*   STEP 1   */
 export const leagueID = "1182840756039831552"; // your league ID
+export const draftid = "1182840756039831553"; // League Draft ID. 
 export const leagueName = "WeAreTheMeanGirls"; // your league name
 export const dues = 20; // (optional) used in template constitution page
-export const dynasty = true; // true for dynasty leagues, false for redraft and keeper
+export const dynasty = false; // true for dynasty leagues, false for redraft and keeper
 export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VITE_CONTENTFUL_SPACE environment variables
+export const draftid = "1182840756039831553"; // League Draft ID. 
 
 /*   STEP 2   */
 export const homepageText = `
