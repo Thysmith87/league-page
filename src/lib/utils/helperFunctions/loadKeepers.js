@@ -1,12 +1,12 @@
 // src/lib/utils/helperFunctions/loadKeepers.js
-import { calculateKeepers } from './lib/keeperRulesEngine';
+import { calculateKeepers } from '$lib/keeperRulesEngine';
 import { manualKeepers } from './manualKeepers';
-import { getLeagueRosters, getDraftInfo, getAllPlayers } from './lib/utls/helper'; 
+import { getLeagueRosters, getDraftInfo, getAllPlayers } from '$lib/utls/helper'; 
 // ^ Adjust to your actual API helper function names
 
 export async function loadKeepers() {
   try {
-    const [rosters, draft, players, adp] = await Promise.all([
+    const [rosters, draft, players] = await Promise.all([
       getLeagueRosters(),
       getDraftInfo(),
       getAllPlayers(),
