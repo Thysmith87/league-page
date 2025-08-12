@@ -1,35 +1,37 @@
-export async function load({ fetch }) {
-    const LEAGUE_ID = '1182840756039831552';
-    const DRAFT_ID = '1182840756039831553';
+async function buildKeeperList(rosters, draftPicks, draftInfo, players) {
+  const CURRENT_YEAR = new Date().getFullYear();
+  const draftYear = new Date(draftInfo.season).getFullYear ? new Date(draftInfo.season).getFullYear() : parseInt(draftInfo.season, 10);
 
-    try {
-        const [rostersRes, draftRes, playersRes] = await Promise.all([
-            fetch(`https://api.sleeper.app/v1/league/${LEAGUE_ID}/rosters`),
-            fetch(`https://api.sleeper.app/v1/draft/${DRAFT_ID}/picks`),
-            fetch(`https://api.sleeper.app/v1/players/nfl`)
-        ]);
+  const lookupRound = Object.fromEntries(
+    draftPicks.map(pick => [pick.player_id, pick.round])
+  );
 
-        if (!rostersRes.ok) throw new Error('Rosters fetch failed');
-        if (!draftRes.ok) throw new Error('Draft picks fetch failed');
-        if (!playersRes.ok) throw new Error('Players fetch failed');
+  return rosters.map(roster => {
+    const keepers = roster.players.map(pid => {
+      const round = lookupRound[pid] ?? Math.max(...draftPicks.map(p => p.round)); // fallback
+      const eligible = (CURRENT_YEAR - draftYear) <= 2;
 
-        const [rosters, draftPicks, players] = await Promise.all([
-            rostersRes.json(),
-            draftRes.json(),
-            playersRes.json()
-        ]);
+      const info = players[pid] || {};
+      const name = info.full_name || `${info.first_name || ''} ${info.last_name || ''}`.trim() || pid;
 
-        console.log('Rosters:', rosters);
-        console.log('Draft Picks:', draftPicks);
-        console.log('Players:', Object.keys(players).length);
+      return {
+        name,
+        round,
+        status: eligible ? 'Eligible' : 'Ineligible'
+      };
+    });
 
-        const keeperData = buildKeeperList(rosters, draftPicks, players);
-        console.log('Keeper Data:', keeperData);
+    const roundCounts = keepers.reduce((acc, k) => {
+      acc[k.round] = (acc[k.round] || 0) + 1;
+      return acc;
+    }, {});
 
-        return { keeperData };
-
-    } catch (err) {
-        console.error('Error loading keeper data:', err);
-        return { keeperData: [] };
-    }
+    return {
+      owner_id: roster.owner_id,
+      keepers: keepers.map(k => ({
+        ...k,
+        status: roundCounts[k.round] > 1 ? `${k.status} (Round Conflict)` : k.status
+      }))
+    };
+  });
 }
