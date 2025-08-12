@@ -1,16 +1,33 @@
 <script>
-    export let keeperData = [];
+  export let data;
 </script>
 
-{#if keeperData.length === 0}
-    <p>No keeper data found.</p>
-{:else}
-    {#each keeperData as team}
-        <h2>Owner: {team.owner_id}</h2>
-        <ul>
-            {#each team.keepers as k}
-                <li>{k.name} - Round {k.round} ({k.status})</li>
-            {/each}
-        </ul>
+<h1>Keeper Options</h1>
+{#if data.keepers && data.keepers.length}
+  <table>
+    <tr>
+      <th>Owner</th>
+      <th>Player</th>
+      <th>Pos</th>
+      <th>Team</th>
+      <th>Round</th>
+      <th>Keeper Cost</th>
+      <th>ADP</th>
+      <th>Eligibility</th>
+    </tr>
+    {#each data.keepers as k}
+      <tr>
+        <td>{k.owner}</td>
+        <td>{k.player}</td>
+        <td>{k.position}</td>
+        <td>{k.team}</td>
+        <td>{k.draftRound}</td>
+        <td>{k.keeperCost}</td>
+        <td>{k.adp}</td>
+        <td>{k.eligibility}</td>
+      </tr>
     {/each}
+  </table>
+{:else}
+  <p>No keeper data found.</p>
 {/if}
