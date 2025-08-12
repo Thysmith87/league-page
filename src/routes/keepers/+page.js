@@ -7,14 +7,22 @@ import {
 } from '$lib/utils/helper';
 
 export async function load({ fetch }) {
-    const leagueId = '1182840756039831552';
+    try {
+        const draftInfo = await getDraftInfo('1048287967434899456');
+        console.log('Draft info:', draftInfo);
 
-    const rosters = await getLeagueRosters(leagueId, fetch);
-    const draft = await getUpcomingDraft(leagueId, fetch);
-    const draftInfo = await getDraftInfo(draft.draft_id, fetch);
-    const players = await getAllPlayers(fetch);
+        const players = await getAllPlayers();
+        console.log('Players:', Object.keys(players).length);
 
-    const keeperData = await buildKeeperList(rosters, draft.picks, draftInfo, players);
-
-    return { keeperData };
+        return {
+            draftInfo,
+            players
+        };
+    } catch (error) {
+        console.error('Error loading page:', error);
+        return {
+            error: error.message
+        };
+    }
 }
+
