@@ -4,7 +4,8 @@
 
 <h1>Keeper Options</h1>
 {#if data.keepers && data.keepers.length}
-  <table>
+ <table>
+  <thead>
     <tr>
       <th>Owner</th>
       <th>Player</th>
@@ -15,6 +16,8 @@
       <th>ADP</th>
       <th>Eligibility</th>
     </tr>
+  </thead>
+  <tbody>
     {#each data.keepers as k}
       <tr>
         <td>{k.owner}</td>
@@ -27,7 +30,8 @@
         <td>{k.eligibility}</td>
       </tr>
     {/each}
-  </table>
+  </tbody>
+</table>
 {:else}
   <p>No keeper data found.</p>
 {/if}
