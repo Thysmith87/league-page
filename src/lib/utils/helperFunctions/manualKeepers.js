@@ -1,12 +1,23 @@
-// helperFunctions/manualKeepers.js
-
-export const manualKeepers = {
-  "76767140996595712": [ // Example: team_id from Sleeper
-    { playerName: "Patrick Mahomes", round: 3 },
-    { playerName: "Christian McCaffrey", round: 1 }
-  ],
-  "341460277440585728": [
-    { playerName: "Justin Jefferson", round: 2 }
-  ],
-  // Add other teams here...
-};
+// src/lib/utils/helperFunctions/manualKeepers.js
+export const manualKeepers = [
+  {
+    owner: "Thysmith",
+    player: "Patrick Mahomes",
+    position: "QB",
+    team: "KC",
+    draftRound: 3,
+    keeperCost: 2,
+    adp: 5,
+    eligibility: "green"
+  },
+  {
+    owner: "Team B",
+    player: "Justin Jefferson",
+    position: "WR",
+    team: "MIN",
+    draftRound: 2,
+    keeperCost: 1,
+    adp: 2,
+    eligibility: "green"
+  }
+];
