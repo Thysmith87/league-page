@@ -4,7 +4,7 @@ import {
     getUpcomingDraft, 
     getDraftInfo, 
     getAllPlayers 
-} from '$lib/utils/helperFunctions';
+} from '$lib/utils/helper';
 
 export async function load({ fetch }) {
     const leagueId = '1182840756039831552';
