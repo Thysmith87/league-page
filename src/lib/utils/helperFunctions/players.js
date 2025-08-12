@@ -57,3 +57,9 @@ export const loadPlayers = async (servFetch, refresh = false) => {
         stale: false
     };
 }
+
+export async function getAllPlayers() {
+    const res = await fetch(`https://api.sleeper.app/v1/players/nfl`);
+    if (!res.ok) throw new Error('Failed to fetch players');
+    return await res.json();
+}
