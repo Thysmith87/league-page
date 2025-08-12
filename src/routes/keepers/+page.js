@@ -8,7 +8,7 @@ import {
 
 export async function load({ fetch }) {
     try {
-        const draftInfo = await getDraftInfo('1182840756039831552');
+        const draftInfo = await getDraftInfo('1182840756039831553');
         console.log('Draft info:', draftInfo);
 
         const players = await getAllPlayers();
