@@ -6,6 +6,11 @@ import {
     getAllPlayers 
 } from '$lib/utils/helper';
 
+console.log('Draft ID:', draftId);
+console.log('Players loaded:', Object.keys(players).length);
+console.log('Rosters:', rosters);
+console.log('Transactions:', transactions);
+
 export async function load({ fetch }) {
     try {
         const draftInfo = await getDraftInfo('1182840756039831552');
