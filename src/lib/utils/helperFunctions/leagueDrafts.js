@@ -243,3 +243,9 @@ export const getPreviousDrafts = async () => {
 
 	return drafts;
 }
+
+export async function getDraftInfo(draftId) {
+    const res = await fetch(`https://api.sleeper.app/v1/draft/${draftId}`);
+    if (!res.ok) throw new Error('Failed to fetch draft info');
+    return await res.json();
+}
