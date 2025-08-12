@@ -1,28 +1,7 @@
-import { 
-    getLeagueRosters, 
-    getLeagueTeamManagers, 
-    getUpcomingDraft, 
-    getDraftInfo, 
-    getAllPlayers 
-} from '$lib/utils/helper';
+// src/routes/+page.js
+import { loadKeepers } from '$lib/loadKeepers';
 
-export async function load({ fetch }) {
-    try {
-        const draftInfo = await getDraftInfo('1182840756039831553');
-        console.log('Draft info:', draftInfo);
-
-        const players = await getAllPlayers();
-        console.log('Players:', Object.keys(players).length);
-
-        return {
-            draftInfo,
-            players
-        };
-    } catch (error) {
-        console.error('Error loading page:', error);
-        return {
-            error: error.message
-        };
-    }
+export async function load() {
+  const keepers = await loadKeepers();
+  return { keepers };
 }
-
