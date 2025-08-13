@@ -3,39 +3,33 @@ import { getLeagueRosters, getPreviousDrafts, loadPlayers, leagueID } from '$lib
 import { calculateKeepers } from '$lib/keeperRulesEngine';
 
 export async function load() {
-  const [rosters, draft, players] = await Promise.all([
-    getLeagueRosters(leagueID),
-    getPreviousDrafts(leagueID),
-    loadPlayers()
-  ]);
+  try {
+    // Load core data
+    const [rosters, previousDrafts, players] = await Promise.all([
+      getLeagueRosters(leagueID),
+      getPreviousDrafts(leagueID),
+      loadPlayers()
+    ]);
 
-  // Assume ADP data will be fetched later; pass empty for now
-  const adp = [];
-
-  // Calculate keeper eligibility
-  const keeperResults = calculateKeepers({
-    rosters,
-    draft: draft[0]?.picks || [],
-    players,
-    adp
-  });
-
-  // Group by owner
-  const ownersMap = {};
-  keeperResults.forEach(player => {
-    if (!ownersMap[player.owner]) {
-      ownersMap[player.owner] = [];
+    if (!rosters?.length || !previousDrafts?.length) {
+      console.warn("No rosters or draft data found for league:", leagueID);
+      return { keepers: [], error: "No keeper data available." };
     }
-    ownersMap[player.owner].push(player);
-  });
 
-  const owners = Object.entries(ownersMap).map(([owner_id, players]) => {
-    return {
-      owner_id,
-      owner_name: rosters.find(r => r.owner_id === owner_id)?.owner?.display_name || 'Unknown Owner',
-      players
-    };
-  });
+    const draft = previousDrafts[0]?.picks || [];
+    const adp = []; // placeholder until we fetch ADP data
 
-  return { owners };
+    const keepers = calculateKeepers({
+      rosters,
+      draft,
+      players,
+      adp
+    });
+
+    return { keepers, error: null };
+
+  } catch (err) {
+    console.error("Keeper loader error:", err);
+    return { keepers: [], error: "Failed to load keeper data." };
+  }
 }
