@@ -64,6 +64,11 @@
 	};
 
 	// Combine starters + bench + reserve
+	$: allPlayers = [
+		...(roster.starters || []),
+		...(roster.players || []),
+		...(roster.reserve || [])
+	];
 	$: fullRoster = digestData(players, allPlayers);
 
 	const buildRecord = (newRoster) => {
