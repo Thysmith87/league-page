@@ -48,7 +48,7 @@
 	}
 
 	return digestedRoster;
-};
+	};
 	const buildRecord = (newRoster) => {
 		const innerRecord = [];
 		if(!newRoster.metadata?.record) return innerRecord;
@@ -63,7 +63,6 @@
 	};
 
 	$: record = buildRecord(roster);
-};
 </script>
 
 <style>
