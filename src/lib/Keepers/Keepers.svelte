@@ -1,6 +1,6 @@
 <script>
 	import { loadPlayers } from '$lib/utils/helper';
-	import RosterSorter from './RosterSorter.svelte'
+	import RosterSorter from './KeeperSorter.svelte'
 
 	export let leagueData, rosterData, leagueTeamManagers, playersInfo;
 
