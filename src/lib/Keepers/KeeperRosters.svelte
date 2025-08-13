@@ -14,41 +14,45 @@
 
 	// Flatten all players (starters + bench + reserve) into one array
 	const digestData = (passedPlayers, rawPlayers) => {
-	let digestedRoster = [];
-
-	for (const singlePlayer of rawPlayers) {
-		let injury = null;
-		switch (passedPlayers[singlePlayer]?.is) {
-			case "Questionable": injury = "Q"; break;
-			case "Out": injury = "OUT"; break;
-			case "PUP": injury = "PUP"; break;
-			case "IR": injury = "IR"; break;
+		let digestedRoster = [];
+	
+		for (const singlePlayer of rawPlayers) {
+			let injury = null;
+			switch (passedPlayers[singlePlayer]?.is) {
+				case "Questionable": injury = "Q"; break;
+				case "Out": injury = "OUT"; break;
+				case "PUP": injury = "PUP"; break;
+				case "IR": injury = "IR"; break;
+			}
+	
+			const keeperInfo = keeperData.find(k => k.playerId === singlePlayer) || {};
+			const eligibilityColor = keeperInfo.eligibility === "green"
+				? "background-color: lightgreen"
+				: keeperInfo.eligibility === "yellow"
+					? "background-color: gold"
+					: keeperInfo.eligibility === "red"
+						? "background-color: lightcoral"
+						: "";
+	
+			digestedRoster.push({
+				id: singlePlayer,
+				name: `${passedPlayers[singlePlayer]?.fn || ''} ${passedPlayers[singlePlayer]?.ln || ''}${injury ? ` (${injury})` : ""}`,
+				poss: passedPlayers[singlePlayer]?.pos,
+				team: passedPlayers[singlePlayer]?.t,
+				avatar: passedPlayers[singlePlayer]?.pos == "DEF"
+					? `background-image: url(https://sleepercdn.com/images/team_logos/nfl/${singlePlayer.toLowerCase()}.png)`
+					: `background-image: url(https://sleepercdn.com/content/nfl/players/thumb/${singlePlayer}.jpg), url(https://sleepercdn.com/images/v2/icons/player_default.webp)`,
+				keeperCost: keeperInfo.keeperCost || "-",
+				eligibilityStyle: eligibilityColor
+			});
 		}
 
-		const keeperInfo = keeperData.find(k => k.playerId === singlePlayer) || {};
-		const eligibilityColor = keeperInfo.eligibility === "green"
-			? "background-color: lightgreen"
-			: keeperInfo.eligibility === "yellow"
-				? "background-color: gold"
-				: keeperInfo.eligibility === "red"
-					? "background-color: lightcoral"
-					: "";
-
-		digestedRoster.push({
-			id: singlePlayer,
-			name: `${passedPlayers[singlePlayer]?.fn || ''} ${passedPlayers[singlePlayer]?.ln || ''}${injury ? ` (${injury})` : ""}`,
-			poss: passedPlayers[singlePlayer]?.pos,
-			team: passedPlayers[singlePlayer]?.t,
-			avatar: passedPlayers[singlePlayer]?.pos == "DEF"
-				? `background-image: url(https://sleepercdn.com/images/team_logos/nfl/${singlePlayer.toLowerCase()}.png)`
-				: `background-image: url(https://sleepercdn.com/content/nfl/players/thumb/${singlePlayer}.jpg), url(https://sleepercdn.com/images/v2/icons/player_default.webp)`,
-			keeperCost: keeperInfo.keeperCost || "-",
-			eligibilityStyle: eligibilityColor
-		});
-	}
-
-	return digestedRoster;
+		return digestedRoster;
 	};
+
+	$: allPlayers = (roster.players || []).filter(p => p !== "0");
+	$: fullRoster = digestData(players, allPlayers);
+
 	const buildRecord = (newRoster) => {
 		const innerRecord = [];
 		if(!newRoster.metadata?.record) return innerRecord;
