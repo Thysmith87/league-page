@@ -49,21 +49,6 @@
 
 	return digestedRoster;
 };
-	const buildRecord = (newRoster) => {
-		const innerRecord = [];
-		if(!newRoster.metadata?.record) return innerRecord;
-		for (const c of newRoster.metadata.record) {
-			switch (c) {
-				case "W": innerRecord.push("green"); break;
-				case "L": innerRecord.push("red"); break;
-				default: innerRecord.push("gray"); break;
-			}
-		}
-		return innerRecord;
-	};
-
-	$: record = buildRecord(roster);
-};
 </script>
 
 <style>
@@ -73,11 +58,6 @@
 		height: 40px;
 		margin-right: 15px;
 		border: 0.25px solid #777;
-	}
-	.record {
-		display: flex;
-		justify-content: space-around;
-		margin-top: 5px;
 	}
 	.result { width: 11px; }
 </style>
@@ -91,11 +71,6 @@
 						<img alt="team avatar" class="teamAvatar" src="{team ? team.avatar : 'https://sleepercdn.com/images/v2/icons/player_default.webp'}" />
 						{team?.name || 'No Manager'}
 					</h3>
-					<div class="record">
-						{#each record as result}
-							<img alt="match result" class="result" src="/{result}.png" />
-						{/each}
-					</div>
 				</Cell>
 			</Row>
 			<Row>
