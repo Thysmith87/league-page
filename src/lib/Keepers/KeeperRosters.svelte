@@ -49,6 +49,21 @@
 
 	return digestedRoster;
 };
+	const buildRecord = (newRoster) => {
+		const innerRecord = [];
+		if(!newRoster.metadata?.record) return innerRecord;
+		for (const c of newRoster.metadata.record) {
+			switch (c) {
+				case "W": innerRecord.push("green"); break;
+				case "L": innerRecord.push("red"); break;
+				default: innerRecord.push("gray"); break;
+			}
+		}
+		return innerRecord;
+	};
+
+	$: record = buildRecord(roster);
+};
 </script>
 
 <style>
