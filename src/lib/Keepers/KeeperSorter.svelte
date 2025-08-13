@@ -1,6 +1,6 @@
 <script>
   import Button, { Label } from '@smui/button';
-	import Roster from './Roster.svelte';
+	import Roster from './KeeperRosters.svelte';
 	
 	export let rosters, leagueTeamManagers, startersAndReserve, leagueData, players;
 
