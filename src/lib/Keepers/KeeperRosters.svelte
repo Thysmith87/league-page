@@ -49,7 +49,6 @@
 
 	return digestedRoster;
 };
-	$: record = buildRecord(roster);
 </script>
 
 <style>
