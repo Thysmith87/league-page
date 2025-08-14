@@ -1,56 +1,55 @@
 <script>
 	import { loadPlayers } from '$lib/utils/helper';
-	import { calculateKeepers } from '$lib/keeperRulesEngine.js';  // ADD THIS IMPORT
+	import { calculateKeepers, logPlayerIds } from '$lib/keeperRulesEngine.js';
 	import RosterSorter from './KeeperSorter.svelte'
 	
-	export let leagueData, rosterData, leagueTeamManagers, playersInfo, previousDrafts;	
-
+	export let leagueData, rosterData, leagueTeamManagers, playersInfo, previousDrafts;
+	
 	let players = playersInfo.players;
 	
-	// ADD THIS - Calculate keeper data using your rules engine
-	// Convert rosters object to array since your calculateKeepers expects an array
+	// Transform the draft data to match what keeper rules engine expects
+	$: draftPicks = previousDrafts?.[0]?.draft ? 
+		previousDrafts[0].draft.flatMap((round, roundIndex) => 
+			round.map(pick => ({
+				player_id: pick.player,  // Convert 'player' to 'player_id'
+				round: roundIndex + 1    // Add round number (1-based)
+			}))
+		) : [];
+
+	// Convert rosters object to array
 	$: rostersArray = rosterData?.rosters ? Object.values(rosterData.rosters) : [];
 	
-	$: draftPicks = previousDrafts?.[0]?.draft ? 
-	    previousDrafts[0].draft.flatMap((round, roundIndex) => 
-	        round.map(pick => ({
-	            player_id: pick.player,  // Convert 'player' to 'player_id'
-	            round: roundIndex + 1    // Add round number (1-based)
-	        }))
-	    ) : [];
-
+	// Calculate keeper data using enhanced rules engine
 	$: keeperData = calculateKeepers({
-	    rosters: rostersArray,
-	    draft: draftPicks,  // Use the transformed draft picks
-	    players: players,
-	    adp: [],
-	    totalRounds: 14
+		rosters: rostersArray,
+		draft: draftPicks,
+		players: players,
+		adp: [], // Add your ADP data if you have it
+		totalRounds: 14,
+		currentYear: 2025
 	});
-
+	
+	// Helper function to log player IDs for manual tracking setup
+	$: if (rostersArray.length > 0 && players) {
+		// Only log once when data is loaded
+		setTimeout(() => {
+			logPlayerIds(rostersArray, players);
+		}, 1000);
+	}
+	
 	// Debug logging
-	$: if (draftPicks.length > 0) {
-	    console.log('Transformed draft picks:', draftPicks.length);
-	    console.log('Sample transformed picks:', draftPicks.slice(0, 5));
+	$: if (keeperData && keeperData.length > 0) {
+		console.log('Keeper data calculated:', keeperData.length, 'players');
+		console.log('Sample keeper data:', keeperData.slice(0, 3));
+		
+		// Show eligibility summary
+		const summary = keeperData.reduce((acc, player) => {
+			acc[player.eligibility] = (acc[player.eligibility] || 0) + 1;
+			return acc;
+		}, {});
+		console.log('Eligibility summary:', summary);
 	}
-	$: {
-	    console.log('previousDrafts data:', previousDrafts);
-	    console.log('previousDrafts type:', typeof previousDrafts);
-	    
-	    if (previousDrafts) {
-	        console.log('previousDrafts length/keys:', Array.isArray(previousDrafts) ? previousDrafts.length : Object.keys(previousDrafts));
-	        console.log('first draft:', previousDrafts[0]);
-	        if (previousDrafts[0]?.picks) {
-	            console.log('picks in first draft:', previousDrafts[0].picks.length);
-	            console.log('sample picks:', previousDrafts[0].picks.slice(0, 3));
-	        }
-	    }
-	}
-	$: if (previousDrafts?.[0]?.draft) {
-	    console.log('2024 draft picks:', previousDrafts[0].draft.length);
-	    console.log('Sample 2024 picks:', previousDrafts[0].draft.slice(0, 5));
-	} else {
-	    console.log('No draft property found in 2024 data:', previousDrafts?.[0]);
-	}
+	
 	const refreshPlayers = async () => {
 		const newPlayersInfo = await loadPlayers(null, true);
 		players = newPlayersInfo.players;
