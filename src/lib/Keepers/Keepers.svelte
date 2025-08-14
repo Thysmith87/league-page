@@ -18,7 +18,19 @@
 		adp: [], // Add your ADP data if you have it
 		totalRounds: 14
 	});
+	// Debug logging - add this after the keeperData calculation
+	$: if (leagueData?.previousDrafts?.[0]?.picks) {
+		console.log('Draft picks found:', leagueData.previousDrafts[0].picks.length);
+		console.log('First few draft picks:', leagueData.previousDrafts[0].picks.slice(0, 5));
+	}
 	
+	$: if (rostersArray.length > 0) {
+		console.log('First roster players:', rostersArray[0].players?.slice(0, 5));
+	}
+	
+	$: if (keeperData.length > 0) {
+		console.log('Sample keeper data:', keeperData.slice(0, 3));
+	}
 	// Debug logging - remove after confirming it works
 	$: if (keeperData && keeperData.length > 0) {
 		console.log('Keeper data calculated:', keeperData);
