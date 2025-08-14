@@ -1,125 +1,79 @@
 <script>
-	import { gotoManager } from '$lib/utils/helper';
-  	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
-	import { Icon } from '@smui/icon-button';
-	import RosterRow from "./KeeperRow.svelte";
+	import { loadPlayers } from '$lib/utils/helper';
+	import { calculateKeepers, logPlayerIds } from '$lib/keeperRulesEngine.js';
+	import RosterSorter from './KeeperSorter.svelte'
+	
+	export let leagueData, rosterData, leagueTeamManagers, playersInfo, previousDrafts;
+	
+	let players = playersInfo.players;
+	
+	// Transform the draft data to match what keeper rules engine expects
+	$: draftPicks = previousDrafts?.[0]?.draft ? 
+		previousDrafts[0].draft.flatMap((round, roundIndex) => 
+			round.map(pick => ({
+				player_id: pick.player,  // Convert 'player' to 'player_id'
+				round: roundIndex + 1    // Add round number (1-based)
+			}))
+		) : [];
 
-	// Props passed from loader
-	export let roster;
-	export let leagueTeamManagers;
-	export let players;
-	export let keeperData = []; // Array of { playerId, keeperCost, eligibility }
-
-	$: team = leagueTeamManagers.teamManagersMap[leagueTeamManagers.currentSeason][roster.roster_id].team;
-
-	// Flatten all players (starters + bench + reserve) into one array
-	const digestData = (passedPlayers, rawPlayers) => {
-		let digestedRoster = [];
-
-		for (const singlePlayer of rawPlayers) {
-			let injury = null;
-			switch (passedPlayers[singlePlayer]?.is) {
-				case "Questionable": injury = "Q"; break;
-				case "Out": injury = "OUT"; break;
-				case "PUP": injury = "PUP"; break;
-				case "IR": injury = "IR"; break;
-			}
-
-			// pull keeper data (including previousDraftRound now)
-			const keeperInfo = keeperData.find(k => k.playerId === singlePlayer) || {};
-
-			// always set eligibility color (even red for ineligible)
-			const eligibilityColor =
-				keeperInfo.eligibility === "green" ? "background-color: lightgreen" :
-				keeperInfo.eligibility === "yellow" ? "background-color: gold" :
-				"background-color: lightcoral"; // default red
-			digestedRoster.push({
-				id: singlePlayer,
-				name: `${passedPlayers[singlePlayer]?.fn || ''} ${passedPlayers[singlePlayer]?.ln || ''}${injury ? ` (${injury})` : ""}`,
-				poss: passedPlayers[singlePlayer]?.pos,
-				team: passedPlayers[singlePlayer]?.t,
-				avatar: passedPlayers[singlePlayer]?.pos == "DEF"
-					? `background-image: url(https://sleepercdn.com/images/team_logos/nfl/${singlePlayer.toLowerCase()}.png)`
-					: `background-image: url(https://sleepercdn.com/content/nfl/players/thumb/${singlePlayer}.jpg), url(https://sleepercdn.com/images/v2/icons/player_default.webp)`,
-				keeperCost: keeperInfo.keeperCost || "-",
-				previousDraftRound: keeperInfo.previousDraftRound || "-",
-				eligibilityStyle: eligibilityColor
-			});
-		}
-
-		return digestedRoster;
-	};
-
-
-	$: allPlayers = (roster.players || []).filter(p => p !== "0");
-	$: fullRoster = digestData(players, allPlayers);
-
-	const buildRecord = (newRoster) => {
-		const innerRecord = [];
-		if(!newRoster.metadata?.record) return innerRecord;
-		for (const c of newRoster.metadata.record) {
-			switch (c) {
-				case "W": innerRecord.push("green"); break;
-				case "L": innerRecord.push("red"); break;
-				default: innerRecord.push("gray"); break;
-			}
-		}
-		return innerRecord;
-	};
-
-	$: record = buildRecord(roster);
+	// Convert rosters object to array
+	$: rostersArray = rosterData?.rosters ? Object.values(rosterData.rosters) : [];
+	
+	// Calculate keeper data using enhanced rules engine
+	$: keeperData = calculateKeepers({
+		rosters: rostersArray,
+		draft: draftPicks,
+		players: players,
+		adp: [], // Add your ADP data if you have it
+		totalRounds: 14,
+		currentYear: 2025
+	});
+	
+	// Helper function to log player IDs for manual tracking setup
+	$: if (rostersArray.length > 0 && players) {
+		// Only log once when data is loaded
+		setTimeout(() => {
+			logPlayerIds(rostersArray, players);
+		}, 1000);
+	}
+	
+	// Debug logging
+	$: if (keeperData && keeperData.length > 0) {
+		console.log('Keeper data calculated:', keeperData.length, 'players');
+		console.log('Sample keeper data:', keeperData.slice(0, 3));
+		
+		// Show eligibility summary
+		const summary = keeperData.reduce((acc, player) => {
+			acc[player.eligibility] = (acc[player.eligibility] || 0) + 1;
+			return acc;
+		}, {});
+		console.log('Eligibility summary:', summary);
+	}
+	
+	const refreshPlayers = async () => {
+		const newPlayersInfo = await loadPlayers(null, true);
+		players = newPlayersInfo.players;
+	}
+	
+	if(playersInfo.stale) {
+		refreshPlayers();
+	}
 </script>
 
 <style>
-	.teamAvatar {
-		vertical-align: middle;
-		border-radius: 50%;
-		height: 40px;
-		margin-right: 15px;
-		border: 0.25px solid #777;
+	.rosters {
+		position: relative;
+		z-index: 1;
 	}
-	.record {
-		display: flex;
-		justify-content: space-around;
-		margin-top: 5px;
-	}
-	.result { width: 11px; }
 </style>
 
-<div class="team">
-	<DataTable class="teamInner" table$aria-label="Team Name" style="width: 100%;">
-		<Head>
-			<Row>
-				<Cell colspan=5 class="clickable">
-					<h3 onclick={() => gotoManager({leagueTeamManagers, rosterID: roster.roster_id})}>
-						<img alt="team avatar" class="teamAvatar" src="{team ? team.avatar : 'https://sleepercdn.com/images/v2/icons/player_default.webp'}" />
-						{team?.name || 'No Manager'}
-					</h3>
-					<div class="record">
-						{#each record as result}
-							<img alt="match result" class="result" src="/{result}.png" />
-						{/each}
-					</div>
-				</Cell>
-			</Row>
-			<Row>
-				<Cell>Player</Cell>
-				<Cell>Pos</Cell>
-				<Cell>Team</Cell>
-				<Cell>Keeper Draft Round</Cell>
-				<Cell>Eligibility</Cell>
-			</Row>
-		</Head>
-		<Body>
-			{#each fullRoster as p}
-				<Row>
-					<Cell><div style="background:{p.avatar}">{p.name}</div></Cell>
-					<Cell>{p.poss}</Cell>
-					<Cell>{p.team}</Cell>
-					<Cell>{p.previousDraftRound}</Cell>
-					<Cell style={p.eligibilityStyle}></Cell>
-				</Row>
-			{/each}
-		</Body>
-	</DataTable>
+<div class="rosters">
+	<RosterSorter 
+		rosters={rosterData.rosters} 
+		{players} 
+		{leagueTeamManagers} 
+		startersAndReserve={rosterData.startersAndReserve} 
+		{leagueData}
+		{keeperData}
+	/>
 </div>
