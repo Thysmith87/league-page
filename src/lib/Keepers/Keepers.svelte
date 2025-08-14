@@ -11,15 +11,27 @@
 	// Convert rosters object to array since your calculateKeepers expects an array
 	$: rostersArray = rosterData?.rosters ? Object.values(rosterData.rosters) : [];
 	
+	$: draftPicks = previousDrafts?.[0]?.draft ? 
+	    previousDrafts[0].draft.flatMap((round, roundIndex) => 
+	        round.map(pick => ({
+	            player_id: pick.player,  // Convert 'player' to 'player_id'
+	            round: roundIndex + 1    // Add round number (1-based)
+	        }))
+	    ) : [];
+
 	$: keeperData = calculateKeepers({
 	    rosters: rostersArray,
-	    draft: previousDrafts?.[0]?.draft || [],  // Use the loaded draft data
+	    draft: draftPicks,  // Use the transformed draft picks
 	    players: players,
 	    adp: [],
 	    totalRounds: 14
 	});
 
 	// Debug logging
+	$: if (draftPicks.length > 0) {
+	    console.log('Transformed draft picks:', draftPicks.length);
+	    console.log('Sample transformed picks:', draftPicks.slice(0, 5));
+	}
 	$: {
 	    console.log('previousDrafts data:', previousDrafts);
 	    console.log('previousDrafts type:', typeof previousDrafts);
