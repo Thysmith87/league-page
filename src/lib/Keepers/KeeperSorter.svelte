@@ -129,7 +129,7 @@
 				{leagueTeamManagers} 
 				{players} 
 				{startersAndReserve}
-				{keeperData}  <!-- ADD THIS PROP -->
+				{keeperData}
 			/>
 		{/each}
 	</div>
