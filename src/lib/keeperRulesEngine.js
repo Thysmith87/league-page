@@ -1,7 +1,7 @@
 // src/lib/keeperRulesEngine.js
 // NOTE: draft = array of picks (from previousDrafts[0].picks)
 // players = sleeper players map keyed by player_id
-export function calculateKeepers({ rosters, draft, players, adp = [], totalRounds = 16 }) {
+export function calculateKeepers({ rosters, draft, players, adp = [], totalRounds = 14 }) {
   // Map ADP by name (optional)
   const adpMap = new Map();
   for (const p of adp) {
