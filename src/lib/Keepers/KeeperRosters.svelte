@@ -34,7 +34,6 @@
 				keeperInfo.eligibility === "yellow" ? "background-color: gold" :
 				"background-color: lightcoral"; // default red
 
-			digestedRoster.push({
 				id: singlePlayer,
 				name: `${passedPlayers[singlePlayer]?.fn || ''} ${passedPlayers[singlePlayer]?.ln || ''}${injury ? ` (${injury})` : ""}`,
 				poss: passedPlayers[singlePlayer]?.pos,
