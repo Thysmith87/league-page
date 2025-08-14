@@ -101,10 +101,6 @@
 		max-width: 500px;
 		margin: 80px auto;
 	}
-	.expandButton {
-		margin: 5em auto 2em;
-    	text-align: center;
-	}
 </style>
 
 <div class="expandButton">
