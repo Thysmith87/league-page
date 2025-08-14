@@ -72,11 +72,11 @@ export function calculateKeepers({
         keeperCost = null;
         reason = `Kept ${yearsKept} years - max reached`;
         
-      } else if (previousDraftRound === 1) {
+      //} else if (previousDraftRound === 1) {
         // First round picks can be kept but at round 1 (no cost savings)
-        eligibility = "yellow";
-        keeperCost = 1; // Keep at round 1 cost
-        reason = "1st round pick - no cost savings";
+        //eligibility = "yellow";
+        //keeperCost = 1; // Keep at round 1 cost
+        //reason = "1st round pick - no cost savings";
         
       } else if (previousDraftRound <= totalRounds - 1) {
         // Rounds 2-13: Good keeper candidates (save 1 round)
