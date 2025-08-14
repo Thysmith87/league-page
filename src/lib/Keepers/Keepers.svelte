@@ -20,7 +20,19 @@
 	});
 
 	// Debug logging
-
+	$: {
+	    console.log('previousDrafts data:', previousDrafts);
+	    console.log('previousDrafts type:', typeof previousDrafts);
+	    
+	    if (previousDrafts) {
+	        console.log('previousDrafts length/keys:', Array.isArray(previousDrafts) ? previousDrafts.length : Object.keys(previousDrafts));
+	        console.log('first draft:', previousDrafts[0]);
+	        if (previousDrafts[0]?.picks) {
+	            console.log('picks in first draft:', previousDrafts[0].picks.length);
+	            console.log('sample picks:', previousDrafts[0].picks.slice(0, 3));
+	        }
+	    }
+	}
 	$: if (previousDrafts?.[0]?.draft) {
 	    console.log('2024 draft picks:', previousDrafts[0].draft.length);
 	    console.log('Sample 2024 picks:', previousDrafts[0].draft.slice(0, 5));
