@@ -36,9 +36,13 @@ export function calculateKeepers({ rosters, draft, players, adp = [], totalRound
       const keeperCost = previousDraftRound > 0 ? previousDraftRound - 1 : null;
 
       // Simple eligibility color (refine later for 2-year max etc.)
-      let eligibility = "red";
-      if (keeperCost > 0) eligibility = "green";
-      else if (keeperCost === 0) eligibility = "yellow";
+      if (yearsKept >= 2) {
+        eligibility = "red";  // Ineligible - kept too long
+      } else if (previousDraftRound === 1 {
+        eligibility = "yellow"; // 1st round, kept 1 year = risky
+      } else if (previousDraftRound > 1) {
+        eligibility = "green";  // Good keeper value
+      }
 
       results.push({
         owner: roster.owner_id,
