@@ -16,7 +16,7 @@
 		draft: leagueData?.previousDrafts?.[0]?.picks || [],
 		players: players,
 		adp: [], // Add your ADP data if you have it
-		totalRounds: 16
+		totalRounds: 14
 	});
 	
 	// Debug logging - remove after confirming it works
