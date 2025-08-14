@@ -1,4 +1,3 @@
-	// src/lib/Keepers/KeeperRosters.svelte
 <script>
 	import { gotoManager } from '$lib/utils/helper';
   	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
