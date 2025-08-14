@@ -7,13 +7,12 @@ const keeperHistory = {
   // "4034": { // Christian McCaffrey player ID
   //   2023: { kept: true, owner: "user1" },
   //   2024: { kept: true, owner: "user1" }  // 2nd year - ineligible for 2025
-  // },
-  // "4046": { // Josh Allen player ID
-  //   2024: { kept: true, owner: "user2" }  // 1st year - eligible for 2025
-  // },
-  
-  // TODO: Add your actual keeper history here
-  // You can get player IDs from the console logs when the page loads
+  "2309":
+    2023 { kept: true },
+  "3321":
+    2023 { kept: true },
+    2024 { kept: true },
+
 };
 
 export function calculateKeepers({ 
