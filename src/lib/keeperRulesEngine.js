@@ -1,22 +1,21 @@
 // src/lib/keeperRulesEngine.js
 // Enhanced version with manual keeper tracking
 
-// Manual keeper history - ADD YOUR ACTUAL KEEPER DATA HERE
-const keeperHistory = {
-  // Example format - replace with your actual data:
-  // "4034": { // Christian McCaffrey player ID
-  //   2023: { kept: true, owner: "user1" },
-  //   2024: { kept: true, owner: "user1" }  // 2nd year - ineligible for 2025
-  "2309": {
-    2023: { kept: true }
-  },
-  "3321": {
-    2023: { kept: true },
-    2024: { kept: true }
-  },
-  "2309": {
-    2023: { kept: true }
-  },
+// Manual keeper history - organized by year for easier management
+const keepersByYear = {
+  2023: [
+    // "4034", // Christian McCaffrey
+    // "4046", // Josh Allen
+    // Add player IDs of players kept in 2023
+  ],
+  2024: [
+    // "4034", // Christian McCaffrey (2nd year - ineligible for 2025)
+    // "5890", // Different player (1st year - eligible for 2025)
+    // Add player IDs of players kept in 2024
+  ],
+  
+  // TODO: Add your actual keeper data here
+  // You can get player IDs from the console logs when the page loads
 };
 
 export function calculateKeepers({ 
@@ -58,10 +57,9 @@ export function calculateKeepers({
       const pick = pickByPlayerId.get(pid);
       const previousDraftRound = pick ? Number(pick.round) : Number(totalRounds);
 
-      // Check keeper history for this player
-      const playerHistory = keeperHistory[pid] || {};
-      const yearsKept = Object.keys(playerHistory).filter(year => 
-        playerHistory[year].kept && Number(year) < currentYear
+      // Check keeper history for this player - count how many years they've been kept
+      const yearsKept = Object.keys(keepersByYear).filter(year => 
+        Number(year) < currentYear && keepersByYear[year].includes(pid)
       ).length;
 
       // Calculate keeper eligibility and cost
@@ -75,11 +73,11 @@ export function calculateKeepers({
         keeperCost = null;
         reason = `Kept ${yearsKept} years - max reached`;
         
-      //} else if (previousDraftRound === 1) {
+      } else if (previousDraftRound === 1) {
         // First round picks can be kept but at round 1 (no cost savings)
-        //eligibility = "yellow";
-        //keeperCost = 1; // Keep at round 1 cost
-        //reason = "1st round pick - no cost savings";
+        eligibility = "yellow";
+        keeperCost = 1; // Keep at round 1 cost
+        reason = "1st round pick - no cost savings";
         
       } else if (previousDraftRound <= totalRounds - 1) {
         // Rounds 2-13: Good keeper candidates (save 1 round)
@@ -95,8 +93,8 @@ export function calculateKeepers({
       }
 
       // Get years kept history for display
-      const keeperYears = Object.keys(playerHistory)
-        .filter(year => playerHistory[year].kept)
+      const keeperYears = Object.keys(keepersByYear)
+        .filter(year => keepersByYear[year].includes(pid))
         .sort();
 
       results.push({
@@ -147,7 +145,7 @@ export function logPlayerIds(rosters, players) {
     const rosterPlayers = (roster.players || []).filter(pid => pid !== "0");
     console.log(`Roster ${roster.roster_id}:`);
     
-    for (const pid of rosterPlayers.slice(0, 14)) { // Show first 5 players
+    for (const pid of rosterPlayers.slice(0, 5)) { // Show first 5 players
       const pInfo = players?.[pid] || {};
       const playerName = pInfo.full_name || [pInfo.fn, pInfo.ln].filter(Boolean).join(' ') || pid;
       console.log(`  "${pid}": "${playerName}" (${pInfo.pos} - ${pInfo.t})`);
