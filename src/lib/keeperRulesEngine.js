@@ -1,28 +1,42 @@
-// src/lib/keeperRulesEngine.js
-export function calculateKeepers({ rosters, draft, players, adp }) {
-  const adpMap = Object.fromEntries(adp.map(p => [p.name, p.adp]));
+// keeperRulesEngine.js
+export function calculateKeepers(rosters, draftResults, players, keeperRules) {
+    const results = [];
 
-  return rosters.flatMap(roster => {
-    return roster.players.map(pid => {
-      const draftPick = draft.find(d => d.player_id === pid);
-      const playerInfo = players[pid] || {};
-      const round = draftPick ? draftPick.round : null;
-      const keeperCost = round ? round - 1 : null;
-
-      let eligibility = "red";
-      if (keeperCost && keeperCost > 0) eligibility = "green";
-      else if (keeperCost === 0) eligibility = "yellow";
-
-      return {
-        owner: roster.owner_id,
-        player: playerInfo.full_name,
-        position: playerInfo.position,
-        team: playerInfo.team,
-        draftRound: round,
-        keeperCost,
-        adp: adpMap[playerInfo.full_name] || null,
-        eligibility
-      };
+    // Create a quick lookup for draft positions
+    const draftRoundMap = {};
+    draftResults.forEach(d => {
+        draftRoundMap[d.player_id] = d.round;
     });
-  });
+
+    for (const roster of rosters) {
+        for (const playerId of roster.players || []) {
+            if (playerId === "0") continue; // skip empty slot
+
+            const playerInfo = players[playerId];
+            if (!playerInfo) continue;
+
+            const previousDraftRound = draftRoundMap[playerId] || null;
+            const keeperCost = keeperRules.calculateCost(previousDraftRound);
+
+            const eligibility = keeperRules.checkEligibility({
+                previousDraftRound,
+                keeperCost,
+                playerInfo,
+                roster
+            });
+
+            results.push({
+                owner: roster.owner_id,
+                playerId,
+                player: `${playerInfo.fn} ${playerInfo.ln}`,
+                position: playerInfo.pos,
+                team: playerInfo.t,
+                previousDraftRound,      // NEW field
+                keeperCost,
+                eligibility
+            });
+        }
+    }
+
+    return results;
 }
