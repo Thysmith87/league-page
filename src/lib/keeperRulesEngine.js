@@ -1,42 +1,60 @@
-// keeperRulesEngine.js
-export function calculateKeepers(rosters, draftResults, players, keeperRules) {
-    const results = [];
+// src/lib/keeperRulesEngine.js
+// NOTE: draft = array of picks (from previousDrafts[0].picks)
+// players = sleeper players map keyed by player_id
+export function calculateKeepers({ rosters, draft, players, adp = [], totalRounds = 16 }) {
+  // Map ADP by name (optional)
+  const adpMap = new Map();
+  for (const p of adp) {
+    if (p?.name) adpMap.set(p.name, p.adp);
+  }
 
-    // Create a quick lookup for draft positions
-    const draftRoundMap = {};
-    draftResults.forEach(d => {
-        draftRoundMap[d.player_id] = d.round;
-    });
+  // Fast lookup: player_id -> pick
+  const pickByPlayerId = new Map();
+  for (const p of (draft || [])) {
+    pickByPlayerId.set(String(p.player_id), p);
+  }
 
-    for (const roster of rosters) {
-        for (const playerId of roster.players || []) {
-            if (playerId === "0") continue; // skip empty slot
+  const results = [];
 
-            const playerInfo = players[playerId];
-            if (!playerInfo) continue;
+  for (const roster of rosters || []) {
+    const rosterPlayers = (roster.players || []).filter(pid => pid !== "0");
+    for (const rawPid of rosterPlayers) {
+      const pid = String(rawPid);
+      const pInfo = players?.[pid] || {};
 
-            const previousDraftRound = draftRoundMap[playerId] || null;
-            const keeperCost = keeperRules.calculateCost(previousDraftRound);
+      // Prefer Sleeper's full_name; fallback to fn/ln if that’s what your players map has
+      const playerName =
+        pInfo.full_name ||
+        [pInfo.fn, pInfo.ln].filter(Boolean).join(' ') ||
+        pid;
 
-            const eligibility = keeperRules.checkEligibility({
-                previousDraftRound,
-                keeperCost,
-                playerInfo,
-                roster
-            });
+      // Previous year’s draft round (or last round if waiver per your rule)
+      const pick = pickByPlayerId.get(pid);
+      const previousDraftRound = pick ? Number(pick.round) : Number(totalRounds);
 
-            results.push({
-                owner: roster.owner_id,
-                playerId,
-                player: `${playerInfo.fn} ${playerInfo.ln}`,
-                position: playerInfo.pos,
-                team: playerInfo.t,
-                previousDraftRound,      // NEW field
-                keeperCost,
-                eligibility
-            });
-        }
+      // Your simple keeper cost logic (you can refine later)
+      const keeperCost = previousDraftRound > 0 ? previousDraftRound - 1 : null;
+
+      // Simple eligibility color (refine later for 2-year max etc.)
+      let eligibility = "red";
+      if (keeperCost > 0) eligibility = "green";
+      else if (keeperCost === 0) eligibility = "yellow";
+
+      results.push({
+        owner: roster.owner_id,
+        rosterId: roster.roster_id,
+        playerId: pid,                    // <-- IMPORTANT for your Svelte match
+        player: playerName,
+        position: pInfo.pos,
+        team: pInfo.t,
+        previousDraftRound,               // <-- NEW
+        draftRound: previousDraftRound,   // (alias if you referenced 'draftRound' elsewhere)
+        keeperCost,
+        adp: adpMap.get(playerName) ?? null,
+        eligibility
+      });
     }
+  }
 
-    return results;
+  return results;
 }
