@@ -109,7 +109,8 @@
 				<Cell>Prev Draft Round</Cell>
 				<Cell>Keeper Cost</Cell>
 				<Cell>Eligibility</Cell>
-			</Row>	
+			</Row>
+		</Head>
 		<Body>
 			{#each fullRoster as p}
 				<Row>
