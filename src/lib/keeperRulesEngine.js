@@ -43,7 +43,7 @@ export function calculateKeepers({ rosters, draft, players, adp = [], totalRound
       results.push({
         owner: roster.owner_id,
         rosterId: roster.roster_id,
-        playerId: pid,                    // <-- IMPORTANT for your Svelte match
+        playerId: String(pid),                   // <-- IMPORTANT for your Svelte match
         player: playerName,
         position: pInfo.pos,
         team: pInfo.t,
