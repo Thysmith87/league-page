@@ -21,39 +21,19 @@
 
 	// Debug logging
 
-	// Debug the draft data
-	$: if (previousDrafts?.[0]?.picks) {
-	    console.log('Draft picks loaded:', previousDrafts[0].picks.length);
-	    console.log('Sample picks:', previousDrafts[0].picks.slice(0, 3));
-	}
-	$: if (leagueData?.previousDrafts?.[0]?.picks) {
-		console.log('Draft picks found:', leagueData.previousDrafts[0].picks.length);
-		console.log('First few draft picks:', leagueData.previousDrafts[0].picks.slice(0, 5));
-	}
 	$: {
-	    console.log('Full leagueData structure:', leagueData);
-	    console.log('leagueData keys:', leagueData ? Object.keys(leagueData) : 'leagueData is null/undefined');
-	    
-	    if (leagueData) {
-	        console.log('Looking for draft data in:');
-	        console.log('- leagueData.drafts:', leagueData.drafts);
-	        console.log('- leagueData.previousDrafts:', leagueData.previousDrafts);
-	        console.log('- leagueData.draft:', leagueData.draft);
-	        console.log('- leagueData.draftData:', leagueData.draftData);
-	    }
+		console.log('previousDrafts data:', previousDrafts);
+		console.log('previousDrafts type:', typeof previousDrafts);
+		
+		if (previousDrafts) {
+			console.log('previousDrafts length/keys:', Array.isArray(previousDrafts) ? previousDrafts.length : Object.keys(previousDrafts));
+			console.log('first draft:', previousDrafts[0]);
+			if (previousDrafts[0]?.picks) {
+				console.log('picks in first draft:', previousDrafts[0].picks.length);
+				console.log('sample picks:', previousDrafts[0].picks.slice(0, 3));
+			}
+		}
 	}
-	$: if (rostersArray.length > 0) {
-		console.log('First roster players:', rostersArray[0].players?.slice(0, 5));
-	}
-	
-	$: if (keeperData.length > 0) {
-		console.log('Sample keeper data:', keeperData.slice(0, 3));
-	}
-	// Debug logging - remove after confirming it works
-	$: if (keeperData && keeperData.length > 0) {
-		console.log('Keeper data calculated:', keeperData);
-	}
-	
 	const refreshPlayers = async () => {
 		const newPlayersInfo = await loadPlayers(null, true);
 		players = newPlayersInfo.players;
