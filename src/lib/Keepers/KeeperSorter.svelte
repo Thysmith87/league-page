@@ -3,7 +3,7 @@
 	import Roster from './KeeperRosters.svelte';
 	
 	// ADD keeperData to the props
-	export let rosters, leagueTeamManagers, startersAndReserve, leagueData, players, keeperData;
+	export let rosters, leagueTeamManagers, startersAndReserve, leagueData, players, keeperData, previousDrafts;
 	
 	const rosterPositions = leagueData.roster_positions;
 	const numDivisions = leagueData.settings.divisions || 1;
