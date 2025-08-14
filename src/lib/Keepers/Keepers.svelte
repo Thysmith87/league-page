@@ -8,8 +8,11 @@
 	let players = playersInfo.players;
 	
 	// ADD THIS - Calculate keeper data using your rules engine
+	// Convert rosters object to array since your calculateKeepers expects an array
+	$: rostersArray = rosterData?.rosters ? Object.values(rosterData.rosters) : [];
+	
 	$: keeperData = calculateKeepers({
-		rosters: rosterData?.rosters || [],
+		rosters: rostersArray,
 		draft: leagueData?.previousDrafts?.[0]?.picks || [],
 		players: players,
 		adp: [], // Add your ADP data if you have it
