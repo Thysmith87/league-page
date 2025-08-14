@@ -9,7 +9,7 @@ import {
 } from '$lib/utils/helper';
 
 import { calculateKeepers } from '$lib/keeperRulesEngine';
-import { leagueID } from '$lib/leagueInfo';
+import { leagueID } from '$lib//utils/leagueInfo';
 
 export async function load({ fetch }) {
   // fetch main league info
