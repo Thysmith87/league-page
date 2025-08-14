@@ -45,6 +45,6 @@
 		{leagueTeamManagers} 
 		startersAndReserve={rosterData.startersAndReserve} 
 		{leagueData}
-		{keeperData}  <!-- ADD THIS PROP -->
+		{keeperData}
 	/>
 </div>
