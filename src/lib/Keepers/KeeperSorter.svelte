@@ -103,12 +103,6 @@
 	}
 </style>
 
-<div class="expandButton">
-	<Button onclick={() => {expanded = !expanded}} variant="outlined">
-		<Label>{expanded ? "Minimize" : "Expand"} All Benches</Label>
-	</Button>
-</div>
-
 {#each divisions as division, ix}
 	{#if division.name}
 		<div class="banner banner-D-{ix + 1}">
