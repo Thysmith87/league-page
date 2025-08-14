@@ -3,12 +3,28 @@
   	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
 	import { Icon } from '@smui/icon-button';
 	import RosterRow from "./KeeperRow.svelte";
+	import { onMount } from 'svelte';
 
 	// Props passed from loader
 	export let roster;
 	export let leagueTeamManagers;
 	export let players;
 	export let keeperData = []; // Array of { playerId, keeperCost, eligibility }
+
+	let isMobile = false;
+
+	onMount(() => {
+		const checkMobile = () => {
+			isMobile = window.innerWidth <= 768;
+		};
+		
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
+		
+		return () => {
+			window.removeEventListener('resize', checkMobile);
+		};
+	});
 
 	$: team = leagueTeamManagers.teamManagersMap[leagueTeamManagers.currentSeason][roster.roster_id].team;
 
@@ -200,7 +216,6 @@
 	}
 
 	.player-details-mobile {
-		display: none;
 		font-size: 0.7rem;
 		color: #888;
 		margin-top: 2px;
@@ -253,34 +268,26 @@
 			padding: 6px 8px;
 		}
 		
-		/* Hide less critical columns on very small screens */
-		.hide-mobile {
-			display: none !important;
-		}
-		
-		/* Show mobile details under player name */
-		.player-details-mobile {
-			display: block;
-		}
-		
 		/* Make player column take more space */
 		.player-cell {
 			min-width: 0;
 			flex: 1;
 		}
 
-		/* Adjust column widths for mobile */
+		/* Adjust column widths for mobile - only 3 columns now */
 		:global(.team .mdc-data-table__cell:nth-child(1)) {
 			width: 60%;
 			min-width: 140px;
 		}
 
-		:global(.team .mdc-data-table__cell:nth-child(4)) {
+		:global(.team .mdc-data-table__cell:nth-child(2)) {
 			width: 25%;
+			min-width: 60px;
 		}
 
-		:global(.team .mdc-data-table__cell:nth-child(5)) {
+		:global(.team .mdc-data-table__cell:nth-child(3)) {
 			width: 15%;
+			min-width: 40px;
 		}
 	}
 
@@ -338,8 +345,10 @@
 		<Head>
 			<Row>
 				<Cell>Player</Cell>
-				<Cell class="hide-mobile">Pos</Cell>
-				<Cell class="hide-mobile">Team</Cell>
+				{#if !isMobile}
+					<Cell>Pos</Cell>
+					<Cell>Team</Cell>
+				{/if}
 				<Cell>Draft Round</Cell>
 				<Cell>Eligible</Cell>
 			</Row>
@@ -352,15 +361,19 @@
 							<div class="player-avatar" style="{p.avatar}"></div>
 							<div class="player-info">
 								<div class="player-name">{p.name}</div>
-								<div class="player-details-mobile">
-									<span class="pos-mobile">{p.poss}</span>
-									<span class="team-mobile">{p.team}</span>
-								</div>
+								{#if isMobile}
+									<div class="player-details-mobile">
+										<span class="pos-mobile">{p.poss}</span>
+										<span class="team-mobile">{p.team}</span>
+									</div>
+								{/if}
 							</div>
 						</div>
 					</Cell>
-					<Cell class="hide-mobile"><span class="pos-cell">{p.poss}</span></Cell>
-					<Cell class="hide-mobile"><span class="team-cell">{p.team}</span></Cell>
+					{#if !isMobile}
+						<Cell><span class="pos-cell">{p.poss}</span></Cell>
+						<Cell><span class="team-cell">{p.team}</span></Cell>
+					{/if}
 					<Cell><span class="draft-round-cell">{p.previousDraftRound}</span></Cell>
 					<Cell>
 						<div class="eligibility-cell" style="{p.eligibilityStyle}"></div>
