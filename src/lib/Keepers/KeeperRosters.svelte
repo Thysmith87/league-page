@@ -15,7 +15,7 @@
 	// Flatten all players (starters + bench + reserve) into one array
 	const digestData = (passedPlayers, rawPlayers) => {
 		let digestedRoster = [];
-	
+
 		for (const singlePlayer of rawPlayers) {
 			let injury = null;
 			switch (passedPlayers[singlePlayer]?.is) {
@@ -24,16 +24,16 @@
 				case "PUP": injury = "PUP"; break;
 				case "IR": injury = "IR"; break;
 			}
-	
+
+			// pull keeper data (including previousDraftRound now)
 			const keeperInfo = keeperData.find(k => k.playerId === singlePlayer) || {};
-			const eligibilityColor = keeperInfo.eligibility === "green"
-				? "background-color: lightgreen"
-				: keeperInfo.eligibility === "yellow"
-					? "background-color: gold"
-					: keeperInfo.eligibility === "red"
-						? "background-color: lightcoral"
-						: "";
-	
+
+			// always set eligibility color (even red for ineligible)
+			const eligibilityColor =
+				keeperInfo.eligibility === "green" ? "background-color: lightgreen" :
+				keeperInfo.eligibility === "yellow" ? "background-color: gold" :
+				"background-color: lightcoral"; // default red
+
 			digestedRoster.push({
 				id: singlePlayer,
 				name: `${passedPlayers[singlePlayer]?.fn || ''} ${passedPlayers[singlePlayer]?.ln || ''}${injury ? ` (${injury})` : ""}`,
@@ -43,12 +43,14 @@
 					? `background-image: url(https://sleepercdn.com/images/team_logos/nfl/${singlePlayer.toLowerCase()}.png)`
 					: `background-image: url(https://sleepercdn.com/content/nfl/players/thumb/${singlePlayer}.jpg), url(https://sleepercdn.com/images/v2/icons/player_default.webp)`,
 				keeperCost: keeperInfo.keeperCost || "-",
+				previousDraftRound: keeperInfo.previousDraftRound || "-",
 				eligibilityStyle: eligibilityColor
 			});
 		}
 
 		return digestedRoster;
 	};
+
 
 	$: allPlayers = (roster.players || []).filter(p => p !== "0");
 	$: fullRoster = digestData(players, allPlayers);
@@ -105,16 +107,17 @@
 				<Cell>Player</Cell>
 				<Cell>Pos</Cell>
 				<Cell>Team</Cell>
+				<Cell>Prev Draft Round</Cell>
 				<Cell>Keeper Cost</Cell>
 				<Cell>Eligibility</Cell>
-			</Row>
-		</Head>
+			</Row>	
 		<Body>
 			{#each fullRoster as p}
 				<Row>
 					<Cell><div style="background:{p.avatar}">{p.name}</div></Cell>
 					<Cell>{p.poss}</Cell>
 					<Cell>{p.team}</Cell>
+					<Cell>{p.previousDraftRound}</Cell>
 					<Cell>{p.keeperCost}</Cell>
 					<Cell style={p.eligibilityStyle}></Cell>
 				</Row>
