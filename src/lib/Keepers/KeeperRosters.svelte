@@ -16,6 +16,9 @@
 	// Flatten all players (starters + bench + reserve) into one array
 	const digestData = (passedPlayers, rawPlayers) => {
 		let digestedRoster = [];
+		console.log('Looking for player:', singlePlayer);
+		console.log('Available keeper data:', keeperData);
+		console.log('Found keeper info:', keeperInfo);
 
 		for (const singlePlayer of rawPlayers) {
 			let injury = null;
