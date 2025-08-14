@@ -22,7 +22,7 @@ const keepersByYear = {
     "8146", //Garrett Wilson
     "7564", //Ja'Marr Chase
     "4137", //James Conner
-    "7588", //Javonte Williams
+    "8148", //Jameson Williams
     "7526", //Jaylen Waddle
     "6770", //Joe Burrow
     "5850", //Josh Jacobs
@@ -34,6 +34,13 @@ const keepersByYear = {
     "7543", //Travis Etienne
     "1466", //Travis Kelce
     "3321", //Tyreek Hill
+    "4037", //Chris Godwin
+    "8129", //Dameon Pierce
+    "1373", //Geno Smith
+    "5848", //Hollywood Brown
+    "5038", //Michael Gallup
+    "6151", //Miles Sanders
+    "2449", //Stefon Diggs
   ],
   2024: [
     "8143", //Chris Olave
@@ -65,6 +72,9 @@ const keepersByYear = {
     "9226", //De'Von Achane
     "8155", //Breece Hall
     "10229", //Rashee Rice
+    "4866", //Saquon Barkley
+    "9756", //Jordan Addison
+    "9758", //C.J. Stroud
   ],
   
   // TODO: Add your actual keeper data here
