@@ -14,6 +14,9 @@ const keeperHistory = {
     2023: { kept: true },
     2024: { kept: true }
   },
+  "2309": {
+    2023: { kept: true }
+  },
 };
 
 export function calculateKeepers({ 
@@ -144,7 +147,7 @@ export function logPlayerIds(rosters, players) {
     const rosterPlayers = (roster.players || []).filter(pid => pid !== "0");
     console.log(`Roster ${roster.roster_id}:`);
     
-    for (const pid of rosterPlayers.slice(0, 5)) { // Show first 5 players
+    for (const pid of rosterPlayers.slice(0, 14)) { // Show first 5 players
       const pInfo = players?.[pid] || {};
       const playerName = pInfo.full_name || [pInfo.fn, pInfo.ln].filter(Boolean).join(' ') || pid;
       console.log(`  "${pid}": "${playerName}" (${pInfo.pos} - ${pInfo.t})`);
