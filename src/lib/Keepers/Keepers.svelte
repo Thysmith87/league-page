@@ -3,8 +3,8 @@
 	import { calculateKeepers } from '$lib/keeperRulesEngine.js';  // ADD THIS IMPORT
 	import RosterSorter from './KeeperSorter.svelte'
 	
-	export let leagueData, rosterData, leagueTeamManagers, playersInfo;
-	
+	export let leagueData, rosterData, leagueTeamManagers, playersInfo, previousDrafts;	
+
 	let players = playersInfo.players;
 	
 	// ADD THIS - Calculate keeper data using your rules engine
@@ -12,13 +12,20 @@
 	$: rostersArray = rosterData?.rosters ? Object.values(rosterData.rosters) : [];
 	
 	$: keeperData = calculateKeepers({
-		rosters: rostersArray,
-		draft: leagueData?.previousDrafts?.[0]?.picks || [],
-		players: players,
-		adp: [], // Add your ADP data if you have it
-		totalRounds: 14
+	    rosters: rostersArray,
+	    draft: previousDrafts?.[0]?.picks || [],  // Use the loaded draft data
+	    players: players,
+	    adp: [],
+	    totalRounds: 14
 	});
-	// Debug logging - add this after the keeperData calculation
+
+	// Debug logging
+
+	// Debug the draft data
+	$: if (previousDrafts?.[0]?.picks) {
+	    console.log('Draft picks loaded:', previousDrafts[0].picks.length);
+	    console.log('Sample picks:', previousDrafts[0].picks.slice(0, 3));
+	}
 	$: if (leagueData?.previousDrafts?.[0]?.picks) {
 		console.log('Draft picks found:', leagueData.previousDrafts[0].picks.length);
 		console.log('First few draft picks:', leagueData.previousDrafts[0].picks.slice(0, 5));
