@@ -1,3 +1,4 @@
+// src/lib/Keepers/KeeperRosters.svelte.js
 <script>
 	import { gotoManager } from '$lib/utils/helper';
   	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
@@ -106,8 +107,7 @@
 				<Cell>Player</Cell>
 				<Cell>Pos</Cell>
 				<Cell>Team</Cell>
-				<Cell>Prev Draft Round</Cell>
-				<Cell>Keeper Cost</Cell>
+				<Cell>Keeper Draft Round</Cell>
 				<Cell>Eligibility</Cell>
 			</Row>
 		</Head>
@@ -118,7 +118,6 @@
 					<Cell>{p.poss}</Cell>
 					<Cell>{p.team}</Cell>
 					<Cell>{p.previousDraftRound}</Cell>
-					<Cell>{p.keeperCost}</Cell>
 					<Cell style={p.eligibilityStyle}></Cell>
 				</Row>
 			{/each}
