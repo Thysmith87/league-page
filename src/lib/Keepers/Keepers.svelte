@@ -23,12 +23,17 @@
 		console.log('Draft picks found:', leagueData.previousDrafts[0].picks.length);
 		console.log('First few draft picks:', leagueData.previousDrafts[0].picks.slice(0, 5));
 	}
-	$: if (leagueData?.previousDrafts) {
-	    console.log('Available drafts:', leagueData.previousDrafts.map(d => ({
-	        draft_id: d.draft_id,
-	        season: d.season,
-	        picks_count: d.picks?.length
-	    })));
+	$: {
+	    console.log('Full leagueData structure:', leagueData);
+	    console.log('leagueData keys:', leagueData ? Object.keys(leagueData) : 'leagueData is null/undefined');
+	    
+	    if (leagueData) {
+	        console.log('Looking for draft data in:');
+	        console.log('- leagueData.drafts:', leagueData.drafts);
+	        console.log('- leagueData.previousDrafts:', leagueData.previousDrafts);
+	        console.log('- leagueData.draft:', leagueData.draft);
+	        console.log('- leagueData.draftData:', leagueData.draftData);
+	    }
 	}
 	$: if (rostersArray.length > 0) {
 		console.log('First roster players:', rostersArray[0].players?.slice(0, 5));
