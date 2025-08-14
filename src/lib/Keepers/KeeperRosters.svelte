@@ -153,6 +153,32 @@
 		vertical-align: middle;
 	}
 
+	/* Specific column widths for better space allocation */
+	:global(.team .mdc-data-table__cell:nth-child(1)) {
+		width: 40%;
+		min-width: 120px;
+	}
+
+	:global(.team .mdc-data-table__cell:nth-child(2)) {
+		width: 15%;
+		min-width: 50px;
+	}
+
+	:global(.team .mdc-data-table__cell:nth-child(3)) {
+		width: 15%;
+		min-width: 50px;
+	}
+
+	:global(.team .mdc-data-table__cell:nth-child(4)) {
+		width: 20%;
+		min-width: 60px;
+	}
+
+	:global(.team .mdc-data-table__cell:nth-child(5)) {
+		width: 10%;
+		min-width: 40px;
+	}
+
 	:global(.team .mdc-data-table__header-cell) {
 		padding: 8px 12px;
 		font-size: 0.8rem;
@@ -165,6 +191,28 @@
 	.player-cell {
 		display: flex;
 		align-items: center;
+		min-width: 0;
+	}
+
+	.player-info {
+		min-width: 0;
+		flex: 1;
+	}
+
+	.player-details-mobile {
+		display: none;
+		font-size: 0.7rem;
+		color: #888;
+		margin-top: 2px;
+	}
+
+	.pos-mobile, .team-mobile {
+		margin-right: 8px;
+	}
+
+	.pos-mobile {
+		font-weight: 600;
+		color: #666;
 	}
 
 	.player-avatar {
@@ -180,9 +228,67 @@
 
 	.player-name {
 		font-size: 0.875rem;
-		white-space: nowrap;
+		line-height: 1.2;
 		overflow: hidden;
-		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		word-break: break-word;
+		hyphens: auto;
+	}
+
+	/* Mobile-specific adjustments */
+	@media (max-width: 768px) {
+		.player-name {
+			font-size: 0.8rem;
+		}
+		
+		.player-avatar {
+			width: 20px;
+			height: 20px;
+			margin-right: 6px;
+		}
+		
+		:global(.team .mdc-data-table__cell) {
+			padding: 6px 8px;
+		}
+		
+		/* Hide less critical columns on very small screens */
+		.hide-mobile {
+			display: none !important;
+		}
+		
+		/* Show mobile details under player name */
+		.player-details-mobile {
+			display: block;
+		}
+		
+		/* Make player column take more space */
+		.player-cell {
+			min-width: 0;
+			flex: 1;
+		}
+
+		/* Adjust column widths for mobile */
+		:global(.team .mdc-data-table__cell:nth-child(1)) {
+			width: 60%;
+			min-width: 140px;
+		}
+
+		:global(.team .mdc-data-table__cell:nth-child(4)) {
+			width: 25%;
+		}
+
+		:global(.team .mdc-data-table__cell:nth-child(5)) {
+			width: 15%;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.player-name {
+			font-size: 0.75rem;
+			-webkit-line-clamp: 1;
+		}
 	}
 
 	.pos-cell {
@@ -232,8 +338,8 @@
 		<Head>
 			<Row>
 				<Cell>Player</Cell>
-				<Cell>Pos</Cell>
-				<Cell>Team</Cell>
+				<Cell class="hide-mobile">Pos</Cell>
+				<Cell class="hide-mobile">Team</Cell>
 				<Cell>Draft Round</Cell>
 				<Cell>Eligible</Cell>
 			</Row>
@@ -244,11 +350,17 @@
 					<Cell>
 						<div class="player-cell">
 							<div class="player-avatar" style="{p.avatar}"></div>
-							<span class="player-name">{p.name}</span>
+							<div class="player-info">
+								<div class="player-name">{p.name}</div>
+								<div class="player-details-mobile">
+									<span class="pos-mobile">{p.poss}</span>
+									<span class="team-mobile">{p.team}</span>
+								</div>
+							</div>
 						</div>
 					</Cell>
-					<Cell><span class="pos-cell">{p.poss}</span></Cell>
-					<Cell><span class="team-cell">{p.team}</span></Cell>
+					<Cell class="hide-mobile"><span class="pos-cell">{p.poss}</span></Cell>
+					<Cell class="hide-mobile"><span class="team-cell">{p.team}</span></Cell>
 					<Cell><span class="draft-round-cell">{p.previousDraftRound}</span></Cell>
 					<Cell>
 						<div class="eligibility-cell" style="{p.eligibilityStyle}"></div>
