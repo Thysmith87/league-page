@@ -8,6 +8,7 @@ export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VI
 /*   STEP 2   */
 export const homepageText = `
   <p>Welcome to the 2025/2026 Fantasy League!</p> 
+  <p>View the new Keepers Section to determine your keepers</p> 
 `;
 
 /*   STEP 3   */
