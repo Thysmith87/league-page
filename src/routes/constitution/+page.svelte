@@ -149,7 +149,7 @@
     
     <h3 class="subSectionHeading" bind:this={oneOne}>1.1 Positional Breakdown</h3>
     
-    <p>28 Total Players</p>
+    <p>15 Total Players</p>
     
     <p class="underscore">Starters</p>
     <ul>
@@ -160,12 +160,11 @@
         <li>WR</li>
         <li>TE</li>
         <li>FLEX (RB/WR/TE)</li>
-        <li>FLEX (RB/WR)</li>
         <li>D/ST</li>
         <li>K</li>
     </ul>
     
-    <p>18 Bench (Expanded by 5 between the keague draft and start of regular season)</p>
+    <p>5 Bench</p>
 
     <p>1 IR Spots (Player must be labeled as IR, Out, or Covid in the Sleeper App)</p>
     
@@ -208,44 +207,56 @@
 
     <h4 bind:this={oneTwoTwo}>1.2.2 Lending Players Prohibition</h4>
     <div class="subBlock">
-        <p>Any player traded from a team may not be re-acquired via trade within 6 weeks of the original trade. Any teams involved in this behavior will be subject to the aforementioned collusion punishments.</p>
+        <p>Any player traded from a team may not be re-acquired via trade within 2 weeks of the original trade. Any teams involved in this behavior will be subject to the aforementioned collusion punishments.</p>
     </div>
     
     <h4 bind:this={oneTwoThree}>1.2.3 Trade Deadline</h4>
     <div class="subBlock">
-        <p>The trade deadline will be set for the Saturday of the week 11 games of the NFL season.</p>
+        <p>The trade deadline will be set for the Tuesday of the week 13 games of the NFL season.</p>
+        <p>The FAAB trading deadline will be set for the Tuesday of the week 13 games of the NFL season.</p>
+        <p>The Draft Pick Trade deadline will be set for the Tuesday of the week 10 games of the NFL season.</p>
     </div>
     
     <h4 bind:this={oneTwoFour}>1.2.4 Trade Restrictions</h4>
     <div class="subBlock">
-        <p>You will not be able to trade draft picks that are more than 3 drafts away. For example, during the 2021 season you cannot trade any picks in or after the 2025 draft. You may only trade FAAB $ from the current season.</p>
+        <p>You will not be able to trade draft picks that are more than 3 drafts away. For example, during the 2025 season you cannot trade any picks in or after the 2028 draft. You may only trade FAAB $ from the current season.</p>
     </div>
     
     <h4 bind:this={oneTwoFive}>1.2.5 Veto/Trade Process</h4>
     <div class="subBlock">
-        <p>A total of 7 veto votes are required to veto a trade. Vetoes are only appropriate in instances of collusion or an egregious mismatch of value (i.e. CMC for a backup kicker). Not liking a trade does not warrant a veto.</p>
+        <p>We do not Vero Trades as a whole, but the commissioner has the right to revoke a trade or bring a trade to vote if there is a major concern with the trade.</p>
     </div>
     
     
     
     <h3 bind:this={oneThree}>1.3 Waiver Wire</h3>
     
-    <p>FAAB Waiver wire system. Each team will begin the season with $100. $0 bids are allowed. Bids will process Thursdays and Sundays at 9AM EST.</p>
+    <p>FAAB Waiver wire system. Each team will begin the season with $100. $0 bids are allowed. Bids will process every night at 12am with and locked players will reset Tuesday nights at 2am</p>
+    <p>All Game Days will be Free Agent days. Typically these days are as follows:</p>
+    <ul>
+        <li>Monday - Free Agents</li>
+        <li>Tuesday - Waivers Processing at 3am PST</li>
+        <li>Wednesday - Waivers Processing at 12am PST</li>
+        <li>Thursday - Free Agents</li>
+        <li>Friday - Waivers Processing at 12am PST </li>
+        <li>Saturday - Waivers Processing at 12am PST</li>
+        <li>Sunday - Free Agents</li>
+    </ul>
 
-    <p>FAAB budgets will reset each season in January.</p>
+    <p>FAAB budgets will reset at the beginning of the season.</p>
     
     
     <h2 class="sectionHeading" bind:this={two}>Section 2 Drafting</h2>
     
     <h3 bind:this={twoOne}>2.1 Draft Order</h3>
-    <p>The draft order each year will be a linear draft in reverse order of the previous year’s regular season standings.</p>
+    <p>The draft order each year will be a linear draft with the first 6 picks making up the standings of the consolation bracket; Meaning the first pick is the winner or 7th place finisher second pick is the runner up or the 8th place Finisher</p>
+    <p>The winner of the 5/6 place matchup in the finals will get the 7th round pick and then it will be inverse of standings. ie. the league champion from the previous year will draft last. 
 
     <h3 bind:this={twoTwo}>2.2 Rookie Drafts</h3>
-    <p>Rokkie drafts will consist of 3 round of drafting, with 5 minutes alotted for each pick. To make room for the incoming players, benches will be expanded by (5) spots. These spots will be removed in mid-August, at which point you will need to have cut the necessary players.</p>
-    <p>Any spots not filled during the draft, can be filled immediately afterwards from the waiver wire.</p>
+    <p>Not applicabile</p>
     
     <h3 bind:this={twoThree}>2.3 Draft Day Trades</h3>
-    <p>If a trade is being made during the draft, one or both parties can alert the commissioner to pause the draft to allow for extra time to negotiate the trade.</p>
+    <p>No trades are permitted after the trade deadline has passed until the next years draft is completed.</p>
     
     <h2 class="sectionHeading" bind:this={three}>Section 3 Scoring System</h2>
 
@@ -272,7 +283,7 @@
     <h2 class="sectionHeading" bind:this={five}>Section 5 Tanking Policy</h2>
     
     <h3 bind:this={fiveOne}>5.1 League Tanking Policy</h3>
-    <p>No team may intentionally leave starting roster spots empty. Any evidence of intentionally leaving roster spots empty in order to improve your draft position may be subject to punishment, including but not limited to the forfeiture of draft selections.</p>
+    <p>No team may intentionally leave starting roster spots empty (Except Kickers, you do not need to roaster a kicker). Any evidence of intentionally leaving roster spots empty in order to improve your draft position may be subject to punishment, including but not limited to the forfeiture of draft selections.</p>
 
     <h2 class="sectionHeading" bind:this={six}>Section 6 Replacing Managers</h2>
     
