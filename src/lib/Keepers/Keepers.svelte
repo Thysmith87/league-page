@@ -1,6 +1,6 @@
 <script>
 	import { loadPlayers } from '$lib/utils/helper';
-	import { calculateKeepers, logPlayerIds } from '$lib/keeperRulesEngine.js';
+	import { calculateKeepers, logPlayerIds, findConsecutiveKeepers } from '$lib/keeperRulesEngine.js';
 	import RosterSorter from './KeeperSorter.svelte'
 	
 	export let leagueData, rosterData, leagueTeamManagers, playersInfo, previousDrafts;
@@ -38,6 +38,9 @@
 	}
 	
 	// Debug logging
+	$: if (keeperData.length > 0) {
+		findConsecutiveKeepers(2026);
+	}
 	$: if (keeperData && keeperData.length > 0) {
 		console.log('Keeper data calculated:', keeperData.length, 'players');
 		console.log('Sample keeper data:', keeperData.slice(0, 3));
