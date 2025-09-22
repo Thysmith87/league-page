@@ -141,7 +141,7 @@ export function calculateKeepers({
       } else if (previousDraftRound <= totalRounds - 1) {
         // Rounds 2-13: Good keeper candidates (save 1 round)
         eligibility = "green";
-        reason = `Keep at round ${keeperCost} (save 1 round)`;
+        reason = `Keep at Previous Year Draft Position`;
         
       } else {
         // Waiver pickups (round 14+): Keep at round 13
@@ -163,7 +163,6 @@ export function calculateKeepers({
         team: pInfo.t,
         previousDraftRound,
         draftRound: previousDraftRound, // alias
-        keeperCost,
         adp: adpMap.get(playerName) ?? null,
         eligibility,
         yearsKept,
