@@ -86,7 +86,7 @@ export function calculateKeepers({
   players, 
   adp = [], 
   totalRounds = 14,
-  currentYear = 2025
+  currentYear = 2026
 }) {
   // Map ADP by name (optional)
   const adpMap = new Map();
@@ -126,32 +126,27 @@ export function calculateKeepers({
 
       // Calculate keeper eligibility and cost
       let eligibility = "red";
-      let keeperCost = null;
       let reason = "";
 
       if (yearsKept >= 2) {
         // Player has been kept for 2+ years - INELIGIBLE
         eligibility = "red";
-        keeperCost = null;
         reason = `Kept ${yearsKept} years - max reached`;
         
-      //} else if (previousDraftRound === 1) {
-       // First round picks can be kept but at round 1 (no cost savings)
-       // eligibility = "yellow";
-       // keeperCost = 1; // Keep at round 1 cost
-       // reason = "1st round pick - no cost savings";
+      } else if (yearsKept === 1) {
+       // Kept Previous Year
+        eligibility = "yellow";
+        reason = "1st round pick - no cost savings";
         
       } else if (previousDraftRound <= totalRounds - 1) {
         // Rounds 2-13: Good keeper candidates (save 1 round)
         eligibility = "green";
-        keeperCost = Math.max(1, previousDraftRound - 1);
         reason = `Keep at round ${keeperCost} (save 1 round)`;
         
       } else {
         // Waiver pickups (round 14+): Keep at round 13
         eligibility = "green";
-        keeperCost = totalRounds - 1; // Round 13
-        reason = "Waiver pickup - keep at round 13";
+        reason = "Waiver pickup - keep at round 14";
       }
 
       // Get years kept history for display
