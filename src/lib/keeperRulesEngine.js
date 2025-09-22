@@ -77,40 +77,40 @@ const keepersByYear = {
     "9758", //C.J. Stroud
   ],
   2025: [
-    "9509" //Bijan Robinson
-    "3198" //Derrick Henry
-    "6794" //Justin Jefferson
-    "7564" //Ja'Marr Chase
-    "6786" //CeeDee Lamb
-    "7547" //Amon-Ra St. Brown
-    "9221" //Jahmyr Gibbs
-    "4984" //Josh Allen
-    "8130" //Trey McBride
-    "11632" //Malik Nabers
-    "6790" //D'Andre Swift
-    "6801" //Tee Higgins
-    "8137" //George Pickens
-    "2216" //Mike Evans
-    "8205" //Isiah Pacheco
-    "11635" //Ladd McConkey
-    "11624" //Xavier Worthy
-    "11631" //Brian Thomas
-    "9224" //Chase Brown
-    "4033" //David Njoku
-    "8144" //Chris Olave
-    "11604" //Brock Bowers
-    "9226" //De'Von Achane
-    "11566" //Jayden Daniels
-    "7594" //Chuba Hubbard
-    "8150" //Kyren Williams
-    "11584" //Bucky Irving
-    "7569" //Nico Collins
-    "9484" //Tucker Kraft
-    "9493" //Puka Nacua
-    "10444" //Cedric Tillman
-    "9225" //Tank Bigsby
-    "GB" //Green Bay Packers
-    "7049" //Jauan Jennings
+    "9509", //Bijan Robinson
+    "3198", //Derrick Henry
+    "6794", //Justin Jefferson
+    "7564", //Ja'Marr Chase
+    "6786", //CeeDee Lamb
+    "7547", //Amon-Ra St. Brown
+    "9221", //Jahmyr Gibbs
+    "4984", //Josh Allen
+    "8130", //Trey McBride
+    "11632", //Malik Nabers
+    "6790", //D'Andre Swift
+    "6801", //Tee Higgins
+    "8137", //George Pickens
+    "2216", //Mike Evans
+    "8205", //Isiah Pacheco
+    "11635", //Ladd McConkey
+    "11624", //Xavier Worthy
+    "11631", //Brian Thomas
+    "9224", //Chase Brown
+    "4033", //David Njoku
+    "8144", //Chris Olave
+    "11604", //Brock Bowers
+    "9226", //De'Von Achane
+    "11566", //Jayden Daniels
+    "7594", //Chuba Hubbard
+    "8150", //Kyren Williams
+    "11584", //Bucky Irving
+    "7569", //Nico Collins
+    "9484", //Tucker Kraft
+    "9493", //Puka Nacua
+    "10444", //Cedric Tillman
+    "9225", //Tank Bigsby
+    "GB", //Green Bay Packers
+    "7049", //Jauan Jennings
   ],
     // You can get player IDs from the console logs when the page loads
     //Spread sheet @ https://docs.google.com/spreadsheets/d/15LfrwlLcYJugBgL-VfmZt4CP09t4IolGTsNHGAfH1iI/edit?gid=0#gid=0 can be used to quickly determine keepers. 
