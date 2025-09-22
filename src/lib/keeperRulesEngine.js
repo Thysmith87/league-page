@@ -2,9 +2,6 @@
 // Enhanced version with manual keeper tracking
 
 // Manual keeper history - organized by year for easier management
-// "4034", // Christian McCaffrey
-// "4046", // Josh Allen
-// Add player IDs of players kept in 2023
 const keepersByYear = {
   2024: [
     "8143", //Chris Olave
@@ -41,43 +38,41 @@ const keepersByYear = {
     "9758", //C.J. Stroud
   ],
   2025: [
-    "9509", //Bijan Robinson
+    "9509", //Bijan Robinson (2nd year - INELIGIBLE for 2026)
     "3198", //Derrick Henry
     "6794", //Justin Jefferson
     "7564", //Ja'Marr Chase
-    "6786", //CeeDee Lamb
+    "6786", //CeeDee Lamb (2nd year - INELIGIBLE for 2026)
     "7547", //Amon-Ra St. Brown
-    "9221", //Jahmyr Gibbs
+    "9221", //Jahmyr Gibbs (2nd year - INELIGIBLE for 2026)
     "4984", //Josh Allen
     "8130", //Trey McBride
     "11632", //Malik Nabers
     "6790", //D'Andre Swift
     "6801", //Tee Higgins
     "8137", //George Pickens
-    "2216", //Mike Evans
-    "8205", //Isiah Pacheco
+    "2216", //Mike Evans (2nd year - INELIGIBLE for 2026)
+    "8205", //Isiah Pacheco (2nd year - INELIGIBLE for 2026)
     "11635", //Ladd McConkey
     "11624", //Xavier Worthy
     "11631", //Brian Thomas
     "9224", //Chase Brown
-    "4033", //David Njoku
-    "8144", //Chris Olave
+    "4033", //David Njoku (2nd year - INELIGIBLE for 2026)
+    "8144", //Chris Olave (different from 8143?)
     "11604", //Brock Bowers
-    "9226", //De'Von Achane
+    "9226", //De'Von Achane (2nd year - INELIGIBLE for 2026)
     "11566", //Jayden Daniels
     "7594", //Chuba Hubbard
-    "8150", //Kyren Williams
+    "8150", //Kyren Williams (2nd year - INELIGIBLE for 2026)
     "11584", //Bucky Irving
-    "7569", //Nico Collins
+    "7569", //Nico Collins (2nd year - INELIGIBLE for 2026)
     "9484", //Tucker Kraft
-    "9493", //Puka Nacua
+    "9493", //Puka Nacua (2nd year - INELIGIBLE for 2026)
     "10444", //Cedric Tillman
     "9225", //Tank Bigsby
     "GB", //Green Bay Packers
     "7049", //Jauan Jennings
   ],
-    // You can get player IDs from the console logs when the page loads
-    //Spread sheet @ https://docs.google.com/spreadsheets/d/15LfrwlLcYJugBgL-VfmZt4CP09t4IolGTsNHGAfH1iI/edit?gid=0#gid=0 can be used to quickly determine keepers. 
 };
 
 export function calculateKeepers({ 
@@ -119,34 +114,60 @@ export function calculateKeepers({
       const pick = pickByPlayerId.get(pid);
       const previousDraftRound = pick ? Number(pick.round) : Number(totalRounds);
 
-      // Check keeper history for this player - count how many years they've been kept
-      const yearsKept = Object.keys(keepersByYear).filter(year => 
-        Number(year) < currentYear && keepersByYear[year].includes(pid)
-      ).length;
+      // Count consecutive keeper years leading up to the current year
+      const previousYear = currentYear - 1;
+      const yearBeforePrevious = currentYear - 2;
+      
+      const keptPreviousYear = keepersByYear[previousYear]?.includes(pid) || false;
+      const keptYearBeforePrevious = keepersByYear[yearBeforePrevious]?.includes(pid) || false;
+      
+      // Determine consecutive keeper status
+      let consecutiveYears = 0;
+      if (keptPreviousYear) {
+        consecutiveYears = 1;
+        if (keptYearBeforePrevious) {
+          consecutiveYears = 2;
+        }
+      }
 
       // Calculate keeper eligibility and cost
       let eligibility = "red";
+      let keeperCost = null;
       let reason = "";
 
       if (yearsKept >= 2) {
         // Player has been kept for 2+ years - INELIGIBLE
         eligibility = "red";
-        reason = `Kept ${yearsKept} years - max reached`;
+        keeperCost = null;
+        reason = `Kept ${yearsKept} years - INELIGIBLE (max 2)`;
         
       } else if (yearsKept === 1) {
-       // Kept Previous Year
-        eligibility = "yellow";
-        reason = "1st round pick - no cost savings";
-        
-      } else if (previousDraftRound <= totalRounds - 1) {
-        // Rounds 2-13: Good keeper candidates (save 1 round)
-        eligibility = "green";
-        reason = `Keep at Previous Year Draft Position`;
+        // Player kept 1 year - FINAL keeper year
+        if (previousDraftRound === 1) {
+          eligibility = "yellow";
+          keeperCost = 1;
+          reason = "Final keeper year - 1st round (no savings)";
+        } else {
+          eligibility = "yellow";
+          keeperCost = Math.max(1, previousDraftRound - 1);
+          reason = `Final keeper year - keep at round ${keeperCost}`;
+        }
         
       } else {
-        // Waiver pickups (round 14+): Keep at round 13
-        eligibility = "green";
-        reason = "Waiver pickup - keep at round 14";
+        // Player never kept before - FIRST TIME keeper
+        if (previousDraftRound === 1) {
+          eligibility = "yellow";
+          keeperCost = 1;
+          reason = "1st round pick - no cost savings";
+        } else if (previousDraftRound <= totalRounds - 1) {
+          eligibility = "green";
+          keeperCost = Math.max(1, previousDraftRound - 1);
+          reason = `First-time keeper - save 1 round (${keeperCost})`;
+        } else {
+          eligibility = "green";
+          keeperCost = totalRounds - 1;
+          reason = `Waiver pickup - keep at round ${keeperCost}`;
+        }
       }
 
       // Get years kept history for display
@@ -163,6 +184,7 @@ export function calculateKeepers({
         team: pInfo.t,
         previousDraftRound,
         draftRound: previousDraftRound, // alias
+        keeperCost,
         adp: adpMap.get(playerName) ?? null,
         eligibility,
         yearsKept,
@@ -176,23 +198,53 @@ export function calculateKeepers({
 }
 
 // Helper functions for managing keeper history
-export function addKeeperRecord(playerId, year, owner) {
-  if (!keeperHistory[playerId]) {
-    keeperHistory[playerId] = {};
+export function addKeeperToYear(playerId, year) {
+  if (!keepersByYear[year]) {
+    keepersByYear[year] = [];
   }
-  keeperHistory[playerId][year] = { kept: true, owner };
-  console.log(`Added keeper record: ${playerId} kept by ${owner} in ${year}`);
-}
-
-export function removeKeeperRecord(playerId, year) {
-  if (keeperHistory[playerId] && keeperHistory[playerId][year]) {
-    delete keeperHistory[playerId][year];
-    console.log(`Removed keeper record: ${playerId} in ${year}`);
+  if (!keepersByYear[year].includes(playerId)) {
+    keepersByYear[year].push(playerId);
+    console.log(`Added keeper: ${playerId} to ${year}`);
   }
 }
 
-export function getKeeperHistory() {
-  return keeperHistory;
+export function removeKeeperFromYear(playerId, year) {
+  if (keepersByYear[year]) {
+    const index = keepersByYear[year].indexOf(playerId);
+    if (index > -1) {
+      keepersByYear[year].splice(index, 1);
+      console.log(`Removed keeper: ${playerId} from ${year}`);
+    }
+  }
+}
+
+export function getKeepersByYear() {
+  return keepersByYear;
+}
+
+export function getPlayersKeptInYear(year) {
+  return keepersByYear[year] || [];
+}
+
+export function analyzeKeeperStatus(playerId, players) {
+  const yearsKept = Object.keys(keepersByYear).filter(year => 
+    keepersByYear[year].includes(playerId)
+  );
+  
+  const playerInfo = players?.[playerId];
+  const playerName = playerInfo?.full_name || playerInfo?.fn + ' ' + playerInfo?.ln || playerId;
+  
+  return {
+    playerId,
+    playerName,
+    position: playerInfo?.pos,
+    team: playerInfo?.t,
+    yearsKept: yearsKept.length,
+    keptInYears: yearsKept.sort(),
+    isEligible: yearsKept.length < 2,
+    status: yearsKept.length >= 2 ? 'Ineligible' : 
+            yearsKept.length === 1 ? 'Final Year' : 'First Time'
+  };
 }
 
 export function logPlayerIds(rosters, players) {
@@ -208,4 +260,27 @@ export function logPlayerIds(rosters, players) {
     }
   }
   console.log("=== Copy player IDs above to add to keeperHistory ===");
+}
+
+// Debug function to check duplicate keepers
+export function findDuplicateKeepers() {
+  console.log("=== PLAYERS WITH MULTIPLE KEEPER YEARS ===");
+  const playerCounts = {};
+  
+  // Count appearances
+  for (const [year, players] of Object.entries(keepersByYear)) {
+    for (const playerId of players) {
+      if (!playerCounts[playerId]) {
+        playerCounts[playerId] = [];
+      }
+      playerCounts[playerId].push(year);
+    }
+  }
+  
+  // Show duplicates
+  for (const [playerId, years] of Object.entries(playerCounts)) {
+    if (years.length > 1) {
+      console.log(`${playerId}: kept in years ${years.join(', ')} (${years.length} years - INELIGIBLE)`);
+    }
+  }
 }
