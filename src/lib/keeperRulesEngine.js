@@ -113,6 +113,7 @@ const keepersByYear = {
     "7049" //Jauan Jennings
   ],
     // You can get player IDs from the console logs when the page loads
+    //Spread sheet @ https://docs.google.com/spreadsheets/d/15LfrwlLcYJugBgL-VfmZt4CP09t4IolGTsNHGAfH1iI/edit?gid=0#gid=0 can be used to quickly determine keepers. 
 };
 
 export function calculateKeepers({ 
