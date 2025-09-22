@@ -1,6 +1,6 @@
 <script>
 	import { loadPlayers } from '$lib/utils/helper';
-	import { calculateKeepers, logPlayerIds, findConsecutiveKeepers } from '$lib/keeperRulesEngine.js';
+	import { calculateKeepers, findConsecutiveKeepers } from '$lib/keeperRulesEngine.js';
 	import RosterSorter from './KeeperSorter.svelte'
 	
 	export let leagueData, rosterData, leagueTeamManagers, playersInfo, previousDrafts;
@@ -28,14 +28,6 @@
 		totalRounds: 14,
 		currentYear: 2025
 	});
-	
-	// Helper function to log player IDs for manual tracking setup
-	$: if (rostersArray.length > 0 && players) {
-		// Only log once when data is loaded
-		setTimeout(() => {
-			logPlayerIds(rostersArray, players);
-		}, 1000);
-	}
 	
 	// Debug logging
 	$: if (keeperData.length > 0) {
