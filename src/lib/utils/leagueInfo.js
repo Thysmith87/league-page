@@ -8,7 +8,7 @@ export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VI
 /*   STEP 2   */
 export const homepageText = `
   <p>Welcome to the 2025/2026 Fantasy League!</p> 
-  <p>Draft Complete Good Luck Week 1!</p> 
+  <p>Good luck this season, Time to make some trades!</p> 
 `;
 
 /*   STEP 3   */
