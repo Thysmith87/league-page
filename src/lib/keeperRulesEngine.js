@@ -6,42 +6,6 @@
 // "4046", // Josh Allen
 // Add player IDs of players kept in 2023
 const keepersByYear = {
-  2023: [
-    "7547", //Amon-Ra St. Brown
-    "2309", //Amari Cooper
-    "4663", //Austin Ekeler
-    "8144", //Chris Olave
-    "4034", //Christian McCaffrey
-    "8167", //Christian Watson
-    "4039", //Cooper Kupp
-    "5022", //Dallas Goedert
-    "5872", //Deebo Samuel
-    "7525", //DeVonta Smith
-    "5846", //DK Metcalf
-    "8112", //Drake London
-    "8146", //Garrett Wilson
-    "7564", //Ja'Marr Chase
-    "4137", //James Conner
-    "8148", //Jameson Williams
-    "7526", //Jaylen Waddle
-    "6770", //Joe Burrow
-    "5850", //Josh Jacobs
-    "5012", //Mark Andrews
-    "8136", //Rachaad White
-    "7611", //Rhamondre Stevenson
-    "4866", //Saquon Barkley
-    "5967", //Tony Pollard
-    "7543", //Travis Etienne
-    "1466", //Travis Kelce
-    "3321", //Tyreek Hill
-    "4037", //Chris Godwin
-    "8129", //Dameon Pierce
-    "1373", //Geno Smith
-    "5848", //Hollywood Brown
-    "5038", //Michael Gallup
-    "6151", //Miles Sanders
-    "2449", //Stefon Diggs
-  ],
   2024: [
     "8143", //Chris Olave
     "8112", //Drake London
