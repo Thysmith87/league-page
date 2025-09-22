@@ -132,21 +132,16 @@ export function calculateKeepers({
 
       // Calculate keeper eligibility and cost based on consecutive years
       let eligibility = "red";
-      let reason = "";
 
       if (consecutiveYears >= 2) {
         // Player kept for 2 consecutive years - INELIGIBLE
         eligibility = "red";
-        reason = `Kept 2 consecutive years (${yearBeforePrevious}, ${previousYear}) - INELIGIBLE`;
-        
       } else {
         // Player not kept recently - ELIGIBLE for keeping (Green)
         if (keptPreviousYear = true) {
           eligibility = "yellow";
-          reason = "Can be kept for one more Year";
         } else {
           eligibility = "green";
-          reason = `Redraft or Waiver Pickup`;
         }
       }
 
@@ -170,7 +165,6 @@ export function calculateKeepers({
         keptPreviousYear,
         keptYearBeforePrevious,
         keeperYears, // Array of years this player was kept
-        reason // Explanation for debugging
       });
     }
   }
