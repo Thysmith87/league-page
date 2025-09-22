@@ -4,7 +4,7 @@
 // Manual keeper history - organized by year for easier management
 const keepersByYear = {
   2024: [
-    "8143", //Chris Olave
+    "8144", //Chris Olave
     "8112", //Drake London
     "5846", //DK Metcalf
     "7525", //DeVonta Smith
@@ -58,7 +58,7 @@ const keepersByYear = {
     "11631", //Brian Thomas
     "9224", //Chase Brown
     "4033", //David Njoku (2nd year - INELIGIBLE for 2026)
-    "8144", //Chris Olave (different from 8143?)
+    "8144", //Chris Olave
     "11604", //Brock Bowers
     "9226", //De'Von Achane (2nd year - INELIGIBLE for 2026)
     "11566", //Jayden Daniels
@@ -132,41 +132,21 @@ export function calculateKeepers({
 
       // Calculate keeper eligibility and cost based on consecutive years
       let eligibility = "red";
-      let keeperCost = null;
       let reason = "";
 
       if (consecutiveYears >= 2) {
         // Player kept for 2 consecutive years - INELIGIBLE
         eligibility = "red";
-        keeperCost = null;
         reason = `Kept 2 consecutive years (${yearBeforePrevious}, ${previousYear}) - INELIGIBLE`;
-        
-      } else if (consecutiveYears === 1) {
-        // Player kept last year only - FINAL keeper year (Yellow)
-        if (previousDraftRound === 1) {
-          eligibility = "yellow";
-          keeperCost = 1;
-          reason = `Kept last year (${previousYear}) - Final keeper year - 1st round (no savings)`;
-        } else {
-          eligibility = "yellow";
-          keeperCost = Math.max(1, previousDraftRound - 1);
-          reason = `Kept last year (${previousYear}) - Final keeper year - keep at round ${keeperCost}`;
-        }
         
       } else {
         // Player not kept recently - ELIGIBLE for keeping (Green)
-        if (previousDraftRound === 1) {
+        if (keptPreviousYear = true) {
           eligibility = "yellow";
-          keeperCost = 1;
-          reason = "1st round pick - no cost savings";
-        } else if (previousDraftRound <= totalRounds - 1) {
-          eligibility = "green";
-          keeperCost = Math.max(1, previousDraftRound - 1);
-          reason = `Eligible keeper - save 1 round (keep at ${keeperCost})`;
+          reason = "Can be kept for one more Year";
         } else {
           eligibility = "green";
-          keeperCost = totalRounds - 1;
-          reason = `Waiver pickup - keep at round ${keeperCost}`;
+          reason = `Redraft or Waiver Pickup`;
         }
       }
 
@@ -184,7 +164,6 @@ export function calculateKeepers({
         team: pInfo.t,
         previousDraftRound,
         draftRound: previousDraftRound, // alias
-        keeperCost,
         adp: adpMap.get(playerName) ?? null,
         eligibility,
         consecutiveYears, // Changed from yearsKept
@@ -247,21 +226,6 @@ export function analyzeKeeperStatus(playerId, players) {
     status: yearsKept.length >= 2 ? 'Ineligible' : 
             yearsKept.length === 1 ? 'Final Year' : 'First Time'
   };
-}
-
-export function logPlayerIds(rosters, players) {
-  console.log("=== PLAYER IDS FOR KEEPER TRACKING ===");
-  for (const roster of rosters || []) {
-    const rosterPlayers = (roster.players || []).filter(pid => pid !== "0");
-    console.log(`Roster ${roster.roster_id}:`);
-    
-    for (const pid of rosterPlayers.slice(0, 5)) { // Show first 5 players
-      const pInfo = players?.[pid] || {};
-      const playerName = pInfo.full_name || [pInfo.fn, pInfo.ln].filter(Boolean).join(' ') || pid;
-      console.log(`  "${pid}": "${playerName}" (${pInfo.pos} - ${pInfo.t})`);
-    }
-  }
-  console.log("=== Copy player IDs above to add to keeperHistory ===");
 }
 
 // Debug function to check consecutive keeper status
