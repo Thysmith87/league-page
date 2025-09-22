@@ -130,31 +130,31 @@ export function calculateKeepers({
         }
       }
 
-      // Calculate keeper eligibility and cost
+      // Calculate keeper eligibility and cost based on consecutive years
       let eligibility = "red";
       let keeperCost = null;
       let reason = "";
 
-      if (yearsKept >= 2) {
-        // Player has been kept for 2+ years - INELIGIBLE
+      if (consecutiveYears >= 2) {
+        // Player kept for 2 consecutive years - INELIGIBLE
         eligibility = "red";
         keeperCost = null;
-        reason = `Kept ${yearsKept} years - INELIGIBLE (max 2)`;
+        reason = `Kept 2 consecutive years (${yearBeforePrevious}, ${previousYear}) - INELIGIBLE`;
         
-      } else if (yearsKept === 1) {
-        // Player kept 1 year - FINAL keeper year
+      } else if (consecutiveYears === 1) {
+        // Player kept last year only - FINAL keeper year (Yellow)
         if (previousDraftRound === 1) {
           eligibility = "yellow";
           keeperCost = 1;
-          reason = "Final keeper year - 1st round (no savings)";
+          reason = `Kept last year (${previousYear}) - Final keeper year - 1st round (no savings)`;
         } else {
           eligibility = "yellow";
           keeperCost = Math.max(1, previousDraftRound - 1);
-          reason = `Final keeper year - keep at round ${keeperCost}`;
+          reason = `Kept last year (${previousYear}) - Final keeper year - keep at round ${keeperCost}`;
         }
         
       } else {
-        // Player never kept before - FIRST TIME keeper
+        // Player not kept recently - ELIGIBLE for keeping (Green)
         if (previousDraftRound === 1) {
           eligibility = "yellow";
           keeperCost = 1;
@@ -162,7 +162,7 @@ export function calculateKeepers({
         } else if (previousDraftRound <= totalRounds - 1) {
           eligibility = "green";
           keeperCost = Math.max(1, previousDraftRound - 1);
-          reason = `First-time keeper - save 1 round (${keeperCost})`;
+          reason = `Eligible keeper - save 1 round (keep at ${keeperCost})`;
         } else {
           eligibility = "green";
           keeperCost = totalRounds - 1;
@@ -187,7 +187,9 @@ export function calculateKeepers({
         keeperCost,
         adp: adpMap.get(playerName) ?? null,
         eligibility,
-        yearsKept,
+        consecutiveYears, // Changed from yearsKept
+        keptPreviousYear,
+        keptYearBeforePrevious,
         keeperYears, // Array of years this player was kept
         reason // Explanation for debugging
       });
@@ -262,25 +264,34 @@ export function logPlayerIds(rosters, players) {
   console.log("=== Copy player IDs above to add to keeperHistory ===");
 }
 
-// Debug function to check duplicate keepers
-export function findDuplicateKeepers() {
-  console.log("=== PLAYERS WITH MULTIPLE KEEPER YEARS ===");
-  const playerCounts = {};
+// Debug function to check consecutive keeper status
+export function findConsecutiveKeepers(currentYear = 2026) {
+  console.log("=== CONSECUTIVE KEEPER STATUS ===");
+  const previousYear = currentYear - 1;
+  const yearBeforePrevious = currentYear - 2;
   
-  // Count appearances
-  for (const [year, players] of Object.entries(keepersByYear)) {
-    for (const playerId of players) {
-      if (!playerCounts[playerId]) {
-        playerCounts[playerId] = [];
-      }
-      playerCounts[playerId].push(year);
-    }
-  }
+  const allPlayers = new Set([
+    ...(keepersByYear[yearBeforePrevious] || []),
+    ...(keepersByYear[previousYear] || [])
+  ]);
   
-  // Show duplicates
-  for (const [playerId, years] of Object.entries(playerCounts)) {
-    if (years.length > 1) {
-      console.log(`${playerId}: kept in years ${years.join(', ')} (${years.length} years - INELIGIBLE)`);
+  for (const playerId of allPlayers) {
+    const keptPreviousYear = keepersByYear[previousYear]?.includes(playerId) || false;
+    const keptYearBeforePrevious = keepersByYear[yearBeforePrevious]?.includes(playerId) || false;
+    
+    let status = "";
+    if (keptPreviousYear && keptYearBeforePrevious) {
+      status = "❌ RED - Ineligible (kept 2 consecutive years)";
+    } else if (keptPreviousYear) {
+      status = "⚠️ YELLOW - Final keeper year";
+    } else if (keptYearBeforePrevious) {
+      status = "✅ GREEN - Eligible (gap year)";
     }
+    
+    const years = [];
+    if (keptYearBeforePrevious) years.push(yearBeforePrevious);
+    if (keptPreviousYear) years.push(previousYear);
+    
+    console.log(`${playerId}: kept in [${years.join(', ')}] - ${status}`);
   }
 }
