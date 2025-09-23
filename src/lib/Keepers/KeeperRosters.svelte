@@ -77,7 +77,8 @@
 			}
 		}
 		return innerRecord;
-	};
+	</script>	
+}
 
 	$: record = buildRecord(roster);
 };
