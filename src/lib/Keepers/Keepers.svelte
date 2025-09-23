@@ -26,7 +26,7 @@
 		players: players,
 		adp: [], // Add your ADP data if you have it
 		totalRounds: 14,
-		currentYear: 2025
+		currentYear: new Date().getFullYear()
 	});
 	
 	// Debug logging
