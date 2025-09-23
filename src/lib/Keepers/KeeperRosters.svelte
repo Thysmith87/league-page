@@ -80,7 +80,7 @@
 	};
 
 	$: record = buildRecord(roster);
-}
+};
 <style>
 	.team {
 		margin-bottom: 1rem;
