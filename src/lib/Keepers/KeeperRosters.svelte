@@ -77,11 +77,12 @@
 			}
 		}
 		return innerRecord;
-	</script>	
 }
 
 	$: record = buildRecord(roster);
+	</script>	
 };
+
 <style>
 	.team {
 		margin-bottom: 1rem;
