@@ -80,12 +80,6 @@
 	};
 
 	$: record = buildRecord(roster);
-	// Console Check
-	if (singlePlayer === "8205") { // Pacheco's ID
-	    console.log("Pacheco keeperInfo:", keeperInfo);
-	    console.log("Pacheco eligibility from keeperInfo:", keeperInfo.eligibility);
-	}
-	</script>
 
 <style>
 	.team {
