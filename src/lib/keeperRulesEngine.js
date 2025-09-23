@@ -130,19 +130,18 @@ export function calculateKeepers({
         }
       }
 
-      // Calculate keeper eligibility and cost based on consecutive years
-      let eligibility = "red";
+     // Calculate keeper eligibility and cost based on consecutive years
+      let eligibility = "green"; // Default to green
 
       if (consecutiveYears >= 2) {
         // Player kept for 2 consecutive years - INELIGIBLE
         eligibility = "red";
+      } else if (keptPreviousYear) {
+        // Player kept last year only - FINAL keeper year
+        eligibility = "yellow";
       } else {
-        // Player not kept recently - ELIGIBLE for keeping (Green)
-        if (keptPreviousYear = true) {
-          eligibility = "yellow";
-        } else {
-          eligibility = "green";
-        }
+        // Player not kept recently - ELIGIBLE for keeping
+        eligibility = "green";
       }
 
       // Get years kept history for display
