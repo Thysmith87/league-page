@@ -80,8 +80,8 @@
 }
 
 	$: record = buildRecord(roster);
-	</script>	
-};
+	
+</script>
 
 <style>
 	.team {
