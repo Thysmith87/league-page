@@ -19,14 +19,24 @@
 	// Convert rosters object to array
 	$: rostersArray = rosterData?.rosters ? Object.values(rosterData.rosters) : [];
 	
-	// Calculate keeper data using enhanced rules engine
+	// Get current date and determine fantasy year
+	$: currentFantasyYear = (() => {
+		const now = new Date();
+		const currentMonth = now.getMonth() + 1; // January = 1
+		const currentCalendarYear = now.getFullYear();
+		
+		// If it's before March (offseason), we're planning for the upcoming season
+		// If it's March or later, we're in the current season
+		return currentMonth <= 2 ? currentCalendarYear : currentCalendarYear + 1;
+	})();
+	
 	$: keeperData = calculateKeepers({
 		rosters: rostersArray,
 		draft: draftPicks,
 		players: players,
-		adp: [], // Add your ADP data if you have it
+		adp: [],
 		totalRounds: 14,
-		currentYear: new Date().getFullYear()
+		currentYear: currentFantasyYear
 	});
 	
 	// Debug logging
