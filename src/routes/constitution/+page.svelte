@@ -262,11 +262,13 @@
 
     <h3 bind:this={threeTwo}>3.2 Additional Rules</h3>
     <h4>Median Matchup Rule</h4>
-    <p>We are playing with an additional game each week against the league median score.</p>
-    <ul>
-        <li>The top six teams (those scoring above the league median) will receive one additional win for that week.</li>
-        <li>The bottom six teams (those scoring below the league median) will receive one additional loss added to their weekly record.</li>
-    </ul>
+        <div class="subBlock">
+            <p>We are playing with an additional game each week against the league median score.</p>
+            <ul>
+                <li>The top six teams (those scoring above the league median) will receive one additional win for that week.</li>
+                <li>The bottom six teams (those scoring below the league median) will receive one additional loss added to their weekly record.</li>
+            </ul>
+        </div>
 
     <h2 class="sectionHeading" bind:this={four}>Section 4 Postseason</h2>
     
