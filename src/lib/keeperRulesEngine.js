@@ -81,7 +81,7 @@ export function calculateKeepers({
   players, 
   adp = [], 
   totalRounds = 14,
-  currentYear = 2026
+  currentYear = 2026,
 }) {
   // Map ADP by name (optional)
   const adpMap = new Map();
