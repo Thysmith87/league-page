@@ -279,14 +279,14 @@
     <h2 class="sectionHeading" bind:this={seven}>Section 7 League Finances</h2>
     
     <h3 bind:this={sevenOne}>7.1 League Dues</h3>
-    <p>League dues are set at {dues}$. Dues are collected through <a href="https://account.venmo.com/u/ThyTech">Venmo</a> and collection will be sent out no later than the first of week the first week of the nfl season. All managers must be fully paid up before the start of regular season. In the event that a manager fails to pay before the deadline, a 10% penalty will be added to their payment and will go towards the payouts at the end of the year.</p>
+    <p>League dues are set at ${dues}. Dues are collected through <a href="https://account.venmo.com/u/ThyTech">Venmo</a> and collection will be sent out no later than the first of week the first week of the nfl season. All managers must be fully paid up before the start of regular season. In the event that a manager fails to pay before the deadline, a 10% penalty will be added to their payment and will go towards the payouts at the end of the year.</p>
     
     <h3 bind:this={sevenTwo}>7.2 Payout</h3>
     <p>League payout is structured as follows:</p>
     <ul>
-        <li>1st place: {dues * 8}$</li>
-        <li>2nd place: {dues * 3}$</li>
-        <li>3rd place: {dues}$</li>
+        <li>1st place: ${dues * 8}</li>
+        <li>2nd place: ${dues * 3}</li>
+        <li>3rd place: ${dues}</li>
     </ul>
     <p>In the event that a manager was fined due to late payment, their extra fee will be added to the winner's payout. Similarly, if new managers come into the league and the payout is smaller, the difference will come out of the winner's prize.</p>
     <p>$20 is kept by the league and used for trophies and other shit we can scheme up</p>
