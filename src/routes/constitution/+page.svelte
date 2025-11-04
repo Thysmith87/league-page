@@ -97,7 +97,7 @@
 
 <div class="constitution">
     <h1 class="noUnderscore">LEGENDS LEAGUE CONSTITUTION</h1>
-    
+    <h3 class="noUnderscore">Please for the love of god, use this before asking me stupid questions</h3>
     <h2 class="noUnderscore">TABLE OF CONTENTS</h2>
     
     <h3 class="noUnderscore clickable" onclick={() => goToSection(one)}>Section 1: Roster</h3>
@@ -113,12 +113,13 @@
     <h3 class="noUnderscore clickable" onclick={() => goToSection(two)}>Section 2: Drafting</h3>
     
         <h4 class="noUnderscore clickable" onclick={() => goToSection(twoOne)}>2.1 Draft Order</h4>
-        <h4 class="noUnderscore clickable" onclick={() => goToSection(twoTwo)}>2.2 Rookie Drafts</h4>
+        <h4 class="noUnderscore clickable" onclick={() => goToSection(twoTwo)}>2.2 Keepers</h4>
         <h4 class="noUnderscore clickable" onclick={() => goToSection(twoThree)}>2.3 Draft Day Trades</h4>
     
     <h3 class="noUnderscore clickable" onclick={() => goToSection(three)}>Section 3: Scoring System</h3>
     
-        <h4 class="noUnderscore clickable" onclick={() => goToSection(threeOne)}>3.1 Voting on Scoring System</h4>
+        <h4 class="noUnderscore clickable" onclick={() => goToSection(threeOne)}>3.1 Scoring System</h4>
+        <h4 class="noUnderscore clickable" onclick={() => goToSection(threeTwo)}>3.2 Additional Rules</h4>
     
     <h3 class="noUnderscore clickable" onclick={() => goToSection(four)}>Section 4: Postseason</h3>
     
@@ -170,9 +171,9 @@
 
     <h4 bind:this={oneTwoOne}>1.2.1 Trade Deadline</h4>
     <div class="subBlock">
-        <p>The trade deadline will be set for the Tuesday proceeding the week 13 games of the NFL season.</p>
-        <p>The FAAB trading deadline will be set for the Tuesday proceeding the week 13 games of the NFL season.</p>
-        <p>The Draft Pick Trade deadline will be set for the Tuesday proceeding the week 10 games of the NFL season.</p>
+        <p>The trade deadline is set for the <bold>Tuesday following the Week 13 games</bold> of the NFL season.</p>
+        <p>The FAAB trading deadline is also set for the <bold>Tuesday following the Week 13 games</bold> of the NFL season.</p>
+        <p>The draft pick trading deadline is set for the <bold>Tuesday following the Week 10 games</bold> of the NFL season.</p>
     </div>
 
     <h4 bind:this={oneTwoTwo}>1.2.2 Trade Collusion</h4>
@@ -207,8 +208,6 @@
         <p>We do not Veto Trades as a whole, but the commissioner has the right to revoke a trade or bring a trade to vote if there is a major concern with the trade.</p>
     </div>
     
-    
-    
     <h3 bind:this={oneThree}>1.3 Waiver Wire</h3>
     
     <p>FAAB Waiver wire system. Each team will begin the season with $100. $0 bids are allowed. Bids will process every night at 12am with and locked players will reset Tuesday nights at 2am</p>
@@ -232,9 +231,27 @@
     <p>The draft order each year will be a linear draft with the first 6 picks making up the standings of the consolation bracket; Meaning the first pick is the winner or 7th place finisher second pick is the runner up or the 8th place Finisher</p>
     <p>The winner of the 5/6 place matchup in the finals will get the 7th round pick and then it will be inverse of standings. ie. the league champion from the previous year will draft last. 
 
-    <h3 bind:this={twoTwo}>2.2 Rookie Drafts</h3>
-    <p>Not applicabile</p>
-    
+    <h3 bind:this={twoTwo}>2.2 Keepers</h3>
+    <p>We are playing in a keeper league allowing up to three players to be kept each year at their previous draft position.</p>
+    <p>Keeper Player Rules</p>
+    <ul>
+        <li>A player may only be <bold>kept twice</bold> before being released back into the draft pool.</li>
+        <li>A player not drafted in the current season may be kept in the 14th round.</li>
+        <li>If a player is dropped and later picked back up, <bold>their keeper value remains</bold> based on their original draft position (it does not reset).</li>
+        <li>Keeper selections must be designated by the defined deadline (typically 2 days before the draft) to allow other teams to plan.</li>
+            <ul>
+              <li>Exceptions may be granted day-of for preseason injuries or other extenuating circumstances.</li>
+            </ul>
+        <li>Players <bold>cannot be moved</bold> to a different draft position (better or worse).</li>
+        <li>You may keep a player in a draft pick you traded for, but unless otherwise specified, that player’s position will default to one of your original picks.</li>
+            <ul>
+              <li>When not using one of your orginal draft positions, sleeper is not able to mark the player as Kept in the player history</li>
+            </ul>
+        <li>You are not required to keep any players.</li>
+    </ul>
+
+    <p>Use the <a href="https://wearethemeangirls.com/keepers">Keepers Tab</a> to determine which of players can be kept throughout the season and when making your pre-draft selections. <bold>Keeper Elegibility is solely determined by the charts found in the Keepers Tab</bold> and is in no way accurately tracked in Sleeper</p>
+
     <h3 bind:this={twoThree}>2.3 Draft Day Trades</h3>
     <p>No trades are permitted after the trade deadline has passed until the next years draft is completed.</p>
     
@@ -242,7 +259,15 @@
 
     <h3 bind:this={threeOne}>3.1 Scoring System</h3>
     <p>The league scoring system breakdown is listed on the Sleeper fantasy app (for the most part, it follows typical .5PPR Scoring). The scoring system will never change without a majority league vote.</p>
-    
+
+    <h3 bind:this={threeTwo}>3.1 Additional Rules</h3>
+    <h4>Median Matchup Rule</h4>
+    <p>We are playing with an additional game each week against the league median score.</p>
+    <ul>
+        <li>The top six teams (those scoring above the league median) will receive one additional win for that week.</li>
+        <li>The bottom six teams (those scoring below the league median) will receive one additional loss added to their weekly record.</li>
+    </ul>
+
     <h2 class="sectionHeading" bind:this={four}>Section 4 Postseason</h2>
     
     <h3 bind:this={fourOne}>4.1 Playoffs</h3>
