@@ -260,7 +260,7 @@
     <h3 bind:this={threeOne}>3.1 Scoring System</h3>
     <p>The league scoring system breakdown is listed on the Sleeper fantasy app (for the most part, it follows typical .5PPR Scoring). The scoring system will never change without a majority league vote.</p>
 
-    <h3 bind:this={threeTwo}>3.1 Additional Rules</h3>
+    <h3 bind:this={threeTwo}>3.2 Additional Rules</h3>
     <h4>Median Matchup Rule</h4>
     <p>We are playing with an additional game each week against the league median score.</p>
     <ul>
