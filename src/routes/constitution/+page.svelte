@@ -120,6 +120,7 @@
     
         <h4 class="noUnderscore clickable" onclick={() => goToSection(threeOne)}>3.1 Scoring System</h4>
         <h4 class="noUnderscore clickable" onclick={() => goToSection(threeTwo)}>3.2 Additional Rules</h4>
+            <h5 class="noUnderscore clickable" onclick={() => goToSection(threeTwoOne)}>3.2.1 Median Matchup Rule</h5>
     
     <h3 class="noUnderscore clickable" onclick={() => goToSection(four)}>Section 4: Postseason</h3>
     
@@ -261,7 +262,7 @@
     <p>The league scoring system breakdown is listed on the Sleeper fantasy app (for the most part, it follows typical .5PPR Scoring). The scoring system will never change without a majority league vote.</p>
 
     <h3 bind:this={threeTwo}>3.2 Additional Rules</h3>
-    <h4>Median Matchup Rule</h4>
+        <h4 bind:this={threeTwoOne}>3.2.1 Median Matchup Rule</h4>
         <div class="subBlock">
             <p>We are playing with an additional game each week against the league median score.</p>
             <ul>
