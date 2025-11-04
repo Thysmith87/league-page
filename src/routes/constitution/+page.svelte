@@ -162,7 +162,7 @@
     
     <p>5 Bench</p>
 
-    <p>1 IR Spots (Player must be labeled as IR, Out, Covid, Suspended, and DNR/HOLDOUT/Opt-Out in the Sleeper App)</p>
+    <p>1 IR Spot (Player must be labeled as IR, Out, Covid, Suspended, and DNR/HOLDOUT/Opt-Out in the Sleeper App)</p>
 
     <h3 class="subSectionHeading" bind:this={oneTwo}>1.2 Trading</h3>
     
