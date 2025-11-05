@@ -96,7 +96,7 @@
 </style>
 
 <div class="constitution">
-    <h1 class="noUnderscore">LEGENDS LEAGUE CONSTITUTION</h1>
+    <h1 class="noUnderscore">Marty's Bullshit (The Rules)</h1>
     <h3 class="noUnderscore">Please for the love of god, use this before asking me stupid questions</h3>
     <h2 class="noUnderscore">TABLE OF CONTENTS</h2>
     
