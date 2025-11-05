@@ -7,8 +7,8 @@ export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VI
 
 /*   STEP 2   */
 export const homepageText = `
-  <p>Welcome to the 2025/2026 Fantasy League!</p> 
-  <p>Good luck this season, Time to make some trades!</p> 
+  <p>PICK TRADE DEADLINE IS THIS COMING TUESDAY NOV 11th.</p> 
+  <p>Good luck on this final push to the playoffs there are 5 weeks left which is potentially 10 wins. EVEN CORBIN Could make the playoffs (He wont though)</p> 
 `;
 
 /*   STEP 3   */
