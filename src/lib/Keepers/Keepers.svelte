@@ -80,7 +80,6 @@
 		{currentYear}
 	/>
 
-<div class="rosters">
 	<RosterSorter 
 		rosters={rosterData.rosters} 
 		{players} 
