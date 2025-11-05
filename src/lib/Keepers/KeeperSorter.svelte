@@ -34,6 +34,7 @@
 		flex-wrap: wrap;
 		margin: 10px auto 20px;
 		width: 95%;
+		max-width: 800px;
 	}
 	.banner {
 		display: flex;
