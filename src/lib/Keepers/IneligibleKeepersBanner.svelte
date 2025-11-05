@@ -123,7 +123,7 @@
 	}
 
 	.ineligible-badge {
-		background: #000000;
+		background: #f08080;
 		color: white;
 		padding: 2px 8px;
 		border-radius: 12px;
