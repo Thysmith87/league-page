@@ -25,13 +25,14 @@
 
 <style>
 	.banner-container {
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		background: linear-gradient(135deg, #404040 0%, #000000 100%);
 		border-radius: 12px;
 		padding: 25px;
 		margin: 20px auto;
 		width: 95%;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 		color: white;
+		max-width: 800px;
 	}
 
 	.banner-header {
@@ -122,7 +123,7 @@
 	}
 
 	.ineligible-badge {
-		background: #dc3545;
+		background: #000000;
 		color: white;
 		padding: 2px 8px;
 		border-radius: 12px;
