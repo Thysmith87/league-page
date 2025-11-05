@@ -1,11 +1,14 @@
-<!-- src/lib/Keepers/IneligibleKeepersBanner.svelte -->
+<!-- src/lib/components/Keepers/IneligibleKeepersBanner.svelte -->
 <script>
 	export let keeperData = [];
 	export let leagueTeamManagers;
 	export let currentYear = new Date().getFullYear();
 
+	// Check if data is loaded
+	$: isDataLoaded = keeperData && keeperData.length > 0 && leagueTeamManagers && leagueTeamManagers.teamManagersMap;
+
 	// Filter for ineligible players (red eligibility)
-	$: ineligiblePlayers = keeperData.filter(player => player.eligibility === 'red');
+	$: ineligiblePlayers = isDataLoaded ? keeperData.filter(player => player.eligibility === 'red') : [];
 
 	// Group by roster/owner for better display
 	$: playersByRoster = ineligiblePlayers.reduce((acc, player) => {
@@ -25,14 +28,13 @@
 
 <style>
 	.banner-container {
-		background: linear-gradient(135deg, #404040 0%, #000000 100%);
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 		border-radius: 12px;
 		padding: 25px;
 		margin: 20px auto;
 		width: 95%;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 		color: white;
-		max-width: 800px;
 	}
 
 	.banner-header {
@@ -123,7 +125,7 @@
 	}
 
 	.ineligible-badge {
-		background: #f08080;
+		background: #dc3545;
 		color: white;
 		padding: 2px 8px;
 		border-radius: 12px;
@@ -163,7 +165,13 @@
 	}
 </style>
 
-{#if ineligiblePlayers.length > 0}
+{#if !isDataLoaded}
+	<div class="banner-container">
+		<div class="no-ineligible">
+			Loading keeper data...
+		</div>
+	</div>
+{:else if ineligiblePlayers.length > 0}
 	<div class="banner-container">
 		<div class="banner-header">
 			<h2 class="banner-title">⚠️ Ineligible Keepers for {currentYear}</h2>
@@ -173,7 +181,7 @@
 		</div>
 
 		{#each sortedRosters as [rosterId, players]}
-			{@const team = leagueTeamManagers.teamManagersMap[leagueTeamManagers.currentSeason]?.[rosterId]?.team}
+			{@const team = leagueTeamManagers?.teamManagersMap?.[leagueTeamManagers.currentSeason]?.[rosterId]?.team}
 			<div class="roster-section">
 				<div class="roster-header">
 					<img 
