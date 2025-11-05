@@ -2,7 +2,8 @@
 	import { loadPlayers } from '$lib/utils/helper';
 	import { calculateKeepers, findConsecutiveKeepers } from '$lib/keeperRulesEngine.js';
 	import RosterSorter from './KeeperSorter.svelte'
-	
+	import IneligibleKeepersBanner from './IneligibleKeepersBanner.svelte';
+
 	export let leagueData, rosterData, leagueTeamManagers, playersInfo, previousDrafts;
 	
 	let players = playersInfo.players;
@@ -71,6 +72,13 @@
 		z-index: 1;
 	}
 </style>
+
+<div class="rosters">
+	<IneligibleKeepersBanner 
+		{keeperData} 
+		{leagueTeamManagers}
+		{currentYear}
+	/>
 
 <div class="rosters">
 	<RosterSorter 
