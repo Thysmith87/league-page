@@ -1,4 +1,4 @@
-<!-- src/lib/components/Keepers/IneligibleKeepersBanner.svelte -->
+<!-- src/lib/Keepers/IneligibleKeepersBanner.svelte -->
 <script>
 	export let keeperData = [];
 	export let leagueTeamManagers;
