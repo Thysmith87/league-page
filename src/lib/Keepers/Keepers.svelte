@@ -77,9 +77,8 @@
 	<IneligibleKeepersBanner 
 		{keeperData} 
 		{leagueTeamManagers}
-		{currentYear}
+		currentYear={currentFantasyYear}
 	/>
-
 	<RosterSorter 
 		rosters={rosterData.rosters} 
 		{players} 
