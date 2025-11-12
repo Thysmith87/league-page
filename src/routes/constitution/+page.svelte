@@ -139,6 +139,9 @@
         <h4 class="noUnderscore clickable" onclick={() => goToSection(sevenOne)}>7.1 League Dues</h4>
         <h4 class="noUnderscore clickable" onclick={() => goToSection(sixTwo)}>7.2 Payout</h4>
         <h4 class="noUnderscore clickable" onclick={() => goToSection(sixThree)}>7.3 Raising Dues</h4>
+
+    <h3 class="noUnderscore clickable" onclick={() => goToSection(eight)}>Section 8: Dumb Shit</h3>
+        <h4 class="noUnderscore clickable" onclick={() => goToSection(eightOne)}>8.1 Stupid Trades we should track</h4>
     
     
     <hr />
@@ -321,5 +324,11 @@
 
     <h3 bind:this={sevenThree}>7.3 Raising Dues</h3>
     <p>A ⅔ majority vote is required in order to raise league dues. In the event that a manager is no longer financially comfortable with the buyin, finding a co-manager to split the cost is reccomended.</p>
+
+    <h2 class="sectionHeading" bind:this={eight}>Section 8 Dumb Shit</h2>
+        <p>Here we track all the dumb shit you guys put me through</p>
+    
+    <h3 bind:this={eightOne}>8.1 Stupid Trades we should track</h3>
+        <p>@Ballhog owes @ITouchd0wnThere a 2035 9th for Aaron Rodgers in week 11 of the 2025 Season</p>
 
 </div>
