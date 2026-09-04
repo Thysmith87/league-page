@@ -8,15 +8,12 @@
 	let players = playersInfo.players;
 	
 	// ===== MANUAL YEAR OVERRIDE =====
-	// Set this to true and update MANUAL_YEAR after your draft completes
-	// to move the keeper eligibility window forward.
 	const USE_MANUAL_YEAR = true;
 	const MANUAL_YEAR = 2026; // <-- Update this each year after your draft
 	// =================================
 	
 	$: currentFantasyYear = USE_MANUAL_YEAR ? MANUAL_YEAR : new Date().getFullYear();
 	
-	// Transform the draft data to match what keeper rules engine expects
 	$: draftPicks = previousDrafts?.[0]?.draft ? 
 		previousDrafts[0].draft.flatMap((round, roundIndex) => 
 			round.map(pick => ({
@@ -47,24 +44,59 @@
 </script>
 
 <style>
-	.rosters {
+	.keepers-layout {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		width: 95%;
+		margin: 20px auto;
+	}
+
+	.sidebar-column {
+		width: 100%;
+	}
+
+	.main-column {
+		width: 100%;
 		position: relative;
 		z-index: 1;
 	}
+
+	/* Side-by-side layout on large screens only */
+	@media (min-width: 1100px) {
+		.keepers-layout {
+			flex-direction: row;
+			align-items: flex-start;
+		}
+
+		.sidebar-column {
+			flex: 0 0 320px;
+		}
+
+		.main-column {
+			flex: 1 1 auto;
+			min-width: 0; /* prevents flex overflow issues */
+		}
+	}
 </style>
 
-<div class="rosters">
-	<IneligibleKeepersBanner 
-		{keeperData} 
-		{leagueTeamManagers}
-		currentYear={currentFantasyYear}
-	/>
-	<RosterSorter 
-		rosters={rosterData.rosters} 
-		{players} 
-		{leagueTeamManagers} 
-		startersAndReserve={rosterData.startersAndReserve} 
-		{leagueData}
-		{keeperData}
-	/>
+<div class="keepers-layout">
+	<div class="sidebar-column">
+		<IneligibleKeepersBanner 
+			{keeperData} 
+			{leagueTeamManagers}
+			currentYear={currentFantasyYear}
+			sidebar={true}
+		/>
+	</div>
+	<div class="main-column">
+		<RosterSorter 
+			rosters={rosterData.rosters} 
+			{players} 
+			{leagueTeamManagers} 
+			startersAndReserve={rosterData.startersAndReserve} 
+			{leagueData}
+			{keeperData}
+		/>
+	</div>
 </div>
