@@ -3,9 +3,13 @@
 	export let keeperData = [];
 	export let leagueTeamManagers;
 	export let currentYear = new Date().getFullYear();
+	export let sidebar = false; // NEW: compact vertical layout for sidebar use
+
+	// Check if data is loaded
+	$: isDataLoaded = keeperData && keeperData.length > 0 && leagueTeamManagers && leagueTeamManagers.teamManagersMap;
 
 	// Filter for ineligible players (red eligibility)
-	$: ineligiblePlayers = keeperData.filter(player => player.eligibility === 'red');
+	$: ineligiblePlayers = isDataLoaded ? keeperData.filter(player => player.eligibility === 'red') : [];
 
 	// Group by roster/owner for better display
 	$: playersByRoster = ineligiblePlayers.reduce((acc, player) => {
@@ -18,21 +22,29 @@
 	}, {});
 
 	$: sortedRosters = Object.entries(playersByRoster).sort((a, b) => {
-		// Sort by number of ineligible players descending
 		return b[1].length - a[1].length;
 	});
 </script>
 
 <style>
 	.banner-container {
-		background: linear-gradient(135deg, #404040 0%, #000000 100%);
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 		border-radius: 12px;
 		padding: 25px;
 		margin: 20px auto;
 		width: 95%;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 		color: white;
-		max-width: 800px;
+	}
+
+	.banner-container.sidebar {
+		width: 100%;
+		margin: 0;
+		padding: 18px;
+		position: sticky;
+		top: 20px;
+		max-height: calc(100vh - 40px);
+		overflow-y: auto;
 	}
 
 	.banner-header {
@@ -40,12 +52,23 @@
 		justify-content: space-between;
 		align-items: center;
 		margin-bottom: 20px;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.sidebar .banner-header {
+		flex-direction: column;
+		align-items: flex-start;
 	}
 
 	.banner-title {
 		font-size: 1.8em;
 		font-weight: bold;
 		margin: 0;
+	}
+
+	.sidebar .banner-title {
+		font-size: 1.3em;
 	}
 
 	.banner-count {
@@ -56,12 +79,21 @@
 		font-weight: bold;
 	}
 
+	.sidebar .banner-count {
+		font-size: 0.95em;
+		padding: 6px 12px;
+	}
+
 	.roster-section {
 		background: rgba(255, 255, 255, 0.1);
 		border-radius: 8px;
 		padding: 15px;
 		margin-bottom: 15px;
 		backdrop-filter: blur(10px);
+	}
+
+	.sidebar .roster-section {
+		padding: 10px 12px;
 	}
 
 	.roster-section:last-child {
@@ -82,15 +114,28 @@
 		border: 2px solid white;
 	}
 
+	.sidebar .team-avatar {
+		width: 28px;
+		height: 28px;
+	}
+
 	.team-name {
 		font-size: 1.2em;
 		font-weight: bold;
+	}
+
+	.sidebar .team-name {
+		font-size: 1em;
 	}
 
 	.player-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 		gap: 10px;
+	}
+
+	.sidebar .player-grid {
+		grid-template-columns: 1fr; /* stack single column in narrow sidebar */
 	}
 
 	.player-card {
@@ -123,7 +168,7 @@
 	}
 
 	.ineligible-badge {
-		background: #f08080;
+		background: #dc3545;
 		color: white;
 		padding: 2px 8px;
 		border-radius: 12px;
@@ -139,6 +184,11 @@
 		opacity: 0.9;
 	}
 
+	.sidebar .no-ineligible {
+		padding: 15px;
+		font-size: 1em;
+	}
+
 	.explanation {
 		background: rgba(255, 255, 255, 0.1);
 		padding: 12px 15px;
@@ -146,6 +196,11 @@
 		font-size: 0.9em;
 		margin-top: 15px;
 		border-left: 4px solid rgba(255, 255, 255, 0.5);
+	}
+
+	.sidebar .explanation {
+		font-size: 0.8em;
+		padding: 10px 12px;
 	}
 
 	@media (max-width: 768px) {
@@ -163,17 +218,23 @@
 	}
 </style>
 
-{#if ineligiblePlayers.length > 0}
-	<div class="banner-container">
+{#if !isDataLoaded}
+	<div class="banner-container" class:sidebar>
+		<div class="no-ineligible">
+			Loading keeper data...
+		</div>
+	</div>
+{:else if ineligiblePlayers.length > 0}
+	<div class="banner-container" class:sidebar>
 		<div class="banner-header">
-			<h2 class="banner-title">⚠️ Ineligible Keepers for {currentYear}</h2>
+			<h2 class="banner-title">⚠️ Ineligible Keepers</h2>
 			<div class="banner-count">
 				{ineligiblePlayers.length} {ineligiblePlayers.length === 1 ? 'Player' : 'Players'}
 			</div>
 		</div>
 
 		{#each sortedRosters as [rosterId, players]}
-			{@const team = leagueTeamManagers.teamManagersMap[leagueTeamManagers.currentSeason]?.[rosterId]?.team}
+			{@const team = leagueTeamManagers?.teamManagersMap?.[leagueTeamManagers.currentSeason]?.[rosterId]?.team}
 			<div class="roster-section">
 				<div class="roster-header">
 					<img 
@@ -203,12 +264,11 @@
 		{/each}
 
 		<div class="explanation">
-			<strong>Note:</strong> These players have been kept for 2 consecutive years and cannot be kept for {currentYear}. 
-			They must be returned to the draft pool.
+			<strong>Note:</strong> These players have been kept for 2 consecutive years and cannot be kept for {currentYear}.
 		</div>
 	</div>
 {:else}
-	<div class="banner-container">
+	<div class="banner-container" class:sidebar>
 		<div class="no-ineligible">
 			✅ All players are eligible for keeping next season!
 		</div>
