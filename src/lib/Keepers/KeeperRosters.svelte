@@ -77,13 +77,13 @@
 		isOpen = !isOpen;
 	};
 </script>
-
 <style>
 	.teamAvatar {
 		vertical-align: middle;
 		border-radius: 50%;
-		height: 40px;
-		margin-right: 15px;
+		height: 32px;
+		width: 32px;
+		margin-right: 10px;
 		border: 0.25px solid #777;
 		flex-shrink: 0;
 	}
@@ -97,38 +97,44 @@
 	.header-row {
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-between;
 		gap: 10px;
+		width: 100%;
 	}
 
 	.team-name-link {
 		display: flex;
 		align-items: center;
 		cursor: pointer;
-
-		/* Fixed width so every team card header lines up the same */
-		width: 260px;
+		width: 220px;
 		flex-shrink: 0;
+		min-width: 0; /* required for ellipsis to work inside a flex child */
 	}
 
 	.team-name-text {
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		font-size: 15px;
+		font-weight: 600;
+		margin: 0;
+		line-height: 1.2;
 	}
 
 	.toggle-btn {
-		background: none;
-		border: 1px solid #ccc;
+		background: #2a2a2a;
+		color: #fff;
+		border: 1px solid #555;
 		border-radius: 4px;
 		cursor: pointer;
-		padding: 4px 10px;
-		font-size: 0.85em;
+		padding: 5px 12px;
+		font-size: 0.8em;
 		flex-shrink: 0;
+		white-space: nowrap;
 	}
 
 	.toggle-btn:hover {
-		background: #f0f0f0;
+		background: #3a3a3a;
 	}
 </style>
 
