@@ -9,11 +9,16 @@
 	export let roster;
 	export let leagueTeamManagers;
 	export let players;
-	export let keeperData = []; // Array of { playerId, keeperCost, eligibility }
+	export let keeperData = [];
+	export let expanded = false; // Global "Expand/Minimize All" control from KeeperSorter
+
+	let isOpen = expanded;
+
+	// Sync individual card state whenever the global toggle changes
+	$: isOpen = expanded;
 
 	$: team = leagueTeamManagers.teamManagersMap[leagueTeamManagers.currentSeason][roster.roster_id].team;
 
-	// Flatten all players (starters + bench + reserve) into one array
 	const digestData = (passedPlayers, rawPlayers) => {
 		let digestedRoster = [];
 
@@ -66,6 +71,10 @@
 	};
 
 	$: record = buildRecord(roster);
+
+	const toggleOpen = () => {
+		isOpen = !isOpen;
+	};
 </script>
 
 <style>
@@ -75,6 +84,7 @@
 		height: 40px;
 		margin-right: 15px;
 		border: 0.25px solid #777;
+		flex-shrink: 0;
 	}
 	.record {
 		display: flex;
@@ -83,10 +93,41 @@
 	}
 	.result { width: 11px; }
 
-	/* Fixed-size scrollable body so each team card is a consistent height */
-	:global(.team .mdc-data-table__table-container) {
-		max-height: 340px;
-		overflow-y: auto;
+	.header-row {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+	}
+
+	.team-name-link {
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+
+		/* Fixed width so every team card header lines up the same */
+		width: 260px;
+		flex-shrink: 0;
+	}
+
+	.team-name-text {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.toggle-btn {
+		background: none;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		cursor: pointer;
+		padding: 4px 10px;
+		font-size: 0.85em;
+		flex-shrink: 0;
+	}
+
+	.toggle-btn:hover {
+		background: #f0f0f0;
 	}
 </style>
 
@@ -94,11 +135,16 @@
 	<DataTable class="teamInner" table$aria-label="Team Name" style="width: 100%;">
 		<Head>
 			<Row>
-				<Cell colspan=5 class="clickable">
-					<h3 onclick={() => gotoManager({leagueTeamManagers, rosterID: roster.roster_id})}>
-						<img alt="team avatar" class="teamAvatar" src="{team ? team.avatar : 'https://sleepercdn.com/images/v2/icons/player_default.webp'}" />
-						{team?.name || 'No Manager'}
-					</h3>
+				<Cell colspan=5>
+					<div class="header-row">
+						<div class="team-name-link" onclick={() => gotoManager({leagueTeamManagers, rosterID: roster.roster_id})}>
+							<img alt="team avatar" class="teamAvatar" src="{team ? team.avatar : 'https://sleepercdn.com/images/v2/icons/player_default.webp'}" />
+							<h3 class="team-name-text">{team?.name || 'No Manager'}</h3>
+						</div>
+						<button class="toggle-btn" onclick|stopPropagation={toggleOpen}>
+							{isOpen ? 'Hide roster ▲' : 'Show roster ▼'}
+						</button>
+					</div>
 					<div class="record">
 						{#each record as result}
 							<img alt="match result" class="result" src="/{result}.png" />
@@ -106,24 +152,28 @@
 					</div>
 				</Cell>
 			</Row>
-			<Row>
-				<Cell>Player</Cell>
-				<Cell>Pos</Cell>
-				<Cell>Team</Cell>
-				<Cell>Keeper Draft Round</Cell>
-				<Cell>Eligibility</Cell>
-			</Row>
-		</Head>
-		<Body>
-			{#each fullRoster as p}
+			{#if isOpen}
 				<Row>
-					<Cell><div style="background:{p.avatar}">{p.name}</div></Cell>
-					<Cell>{p.poss}</Cell>
-					<Cell>{p.team}</Cell>
-					<Cell>{p.previousDraftRound}</Cell>
-					<Cell style={p.eligibilityStyle}></Cell>
+					<Cell>Player</Cell>
+					<Cell>Pos</Cell>
+					<Cell>Team</Cell>
+					<Cell>Keeper Draft Round</Cell>
+					<Cell>Eligibility</Cell>
 				</Row>
-			{/each}
-		</Body>
+			{/if}
+		</Head>
+		{#if isOpen}
+			<Body>
+				{#each fullRoster as p}
+					<Row>
+						<Cell><div style="background:{p.avatar}">{p.name}</div></Cell>
+						<Cell>{p.poss}</Cell>
+						<Cell>{p.team}</Cell>
+						<Cell>{p.previousDraftRound}</Cell>
+						<Cell style={p.eligibilityStyle}></Cell>
+					</Row>
+				{/each}
+			</Body>
+		{/if}
 	</DataTable>
 </div>
