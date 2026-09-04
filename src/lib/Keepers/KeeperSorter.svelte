@@ -30,11 +30,11 @@
 <style>
 	.division {
 		display: flex;
-		justify-content: space-around;
+		justify-content: flex-start;
 		flex-wrap: wrap;
+		gap: 20px;
 		margin: 10px auto 20px;
-		width: 95%;
-		max-width: 800px;
+		width: 100%;
 	}
 	.banner {
 		display: flex;
@@ -110,18 +110,13 @@
 			<h2>{division.name}</h2>
 		</div>
 	{/if}
-	<div class="division">
-		{#each division.rosters as roster}
-			<Roster 
-				division={ix + 1} 
-				{expanded} 
-				{rosterPositions} 
-				{roster} 
-				{leagueTeamManagers} 
-				{players} 
-				{startersAndReserve}
-				{keeperData}
-			/>
+<div class="division">
+	{#each division.rosters as roster}
+		<div style="flex: 1 1 100%; min-width: 0;">
+			<Roster division={ix + 1} {expanded} {rosterPositions} {roster} {leagueTeamManagers} {players} {startersAndReserve} {keeperData} />
+		</div>
+	{/each}
+</div>
 		{/each}
 	</div>
 {/each}
