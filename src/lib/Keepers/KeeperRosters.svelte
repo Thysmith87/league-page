@@ -9,13 +9,7 @@
 	export let roster;
 	export let leagueTeamManagers;
 	export let players;
-	export let keeperData = [];
-	export let expanded = false; // Global expand/collapse-all control from KeeperSorter
-
-	let isOpen = expanded; // Individual team's own toggle state
-
-	// Keep individual state in sync when "Expand/Minimize All" is clicked
-	$: isOpen = expanded;
+	export let keeperData = []; // Array of { playerId, keeperCost, eligibility }
 
 	$: team = leagueTeamManagers.teamManagersMap[leagueTeamManagers.currentSeason][roster.roster_id].team;
 
@@ -72,10 +66,6 @@
 	};
 
 	$: record = buildRecord(roster);
-
-	const toggleOpen = () => {
-		isOpen = !isOpen;
-	};
 </script>
 
 <style>
@@ -92,22 +82,11 @@
 		margin-top: 5px;
 	}
 	.result { width: 11px; }
-	.clickable {
-		cursor: pointer;
-	}
-	.chevron {
-		display: inline-block;
-		transition: transform 0.2s ease;
-		margin-left: 8px;
-		font-size: 0.8em;
-	}
-	.chevron.open {
-		transform: rotate(180deg);
-	}
-	.team-header-row {
-		display: flex;
-		align-items: center;
-		justify-content: center;
+
+	/* Fixed-size scrollable body so each team card is a consistent height */
+	:global(.team .mdc-data-table__table-container) {
+		max-height: 340px;
+		overflow-y: auto;
 	}
 </style>
 
@@ -115,14 +94,11 @@
 	<DataTable class="teamInner" table$aria-label="Team Name" style="width: 100%;">
 		<Head>
 			<Row>
-				<Cell colspan=5 class="clickable" on:click={toggleOpen}>
-					<div class="team-header-row">
-						<h3 on:click|stopPropagation={() => gotoManager({leagueTeamManagers, rosterID: roster.roster_id})}>
-							<img alt="team avatar" class="teamAvatar" src="{team ? team.avatar : 'https://sleepercdn.com/images/v2/icons/player_default.webp'}" />
-							{team?.name || 'No Manager'}
-						</h3>
-						<span class="chevron" class:open={isOpen}>▼</span>
-					</div>
+				<Cell colspan=5 class="clickable">
+					<h3 onclick={() => gotoManager({leagueTeamManagers, rosterID: roster.roster_id})}>
+						<img alt="team avatar" class="teamAvatar" src="{team ? team.avatar : 'https://sleepercdn.com/images/v2/icons/player_default.webp'}" />
+						{team?.name || 'No Manager'}
+					</h3>
 					<div class="record">
 						{#each record as result}
 							<img alt="match result" class="result" src="/{result}.png" />
@@ -130,28 +106,24 @@
 					</div>
 				</Cell>
 			</Row>
-			{#if isOpen}
-				<Row>
-					<Cell>Player</Cell>
-					<Cell>Pos</Cell>
-					<Cell>Team</Cell>
-					<Cell>Keeper Draft Round</Cell>
-					<Cell>Eligibility</Cell>
-				</Row>
-			{/if}
+			<Row>
+				<Cell>Player</Cell>
+				<Cell>Pos</Cell>
+				<Cell>Team</Cell>
+				<Cell>Keeper Draft Round</Cell>
+				<Cell>Eligibility</Cell>
+			</Row>
 		</Head>
-		{#if isOpen}
-			<Body>
-				{#each fullRoster as p}
-					<Row>
-						<Cell><div style="background:{p.avatar}">{p.name}</div></Cell>
-						<Cell>{p.poss}</Cell>
-						<Cell>{p.team}</Cell>
-						<Cell>{p.previousDraftRound}</Cell>
-						<Cell style={p.eligibilityStyle}></Cell>
-					</Row>
-				{/each}
-			</Body>
-		{/if}
+		<Body>
+			{#each fullRoster as p}
+				<Row>
+					<Cell><div style="background:{p.avatar}">{p.name}</div></Cell>
+					<Cell>{p.poss}</Cell>
+					<Cell>{p.team}</Cell>
+					<Cell>{p.previousDraftRound}</Cell>
+					<Cell style={p.eligibilityStyle}></Cell>
+				</Row>
+			{/each}
+		</Body>
 	</DataTable>
 </div>
