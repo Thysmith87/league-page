@@ -26,25 +26,24 @@
 	});
 </script>
 
-<style>
-	.banner-container {
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	<style>
+		.banner-container {
+		background: linear-gradient(135deg, #232526 0%, #000000 100%);
 		border-radius: 12px;
 		padding: 25px;
 		margin: 20px auto;
 		width: 95%;
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 		color: white;
 	}
-
+	
 	.banner-container.sidebar {
 		width: 100%;
 		margin: 0;
-		padding: 18px;
-		position: sticky;
-		top: 20px;
-		max-height: calc(100vh - 40px);
+		padding: 12px;
+		max-height: 100%;
 		overflow-y: auto;
+		font-size: 0.85em; /* shrinks everything inside proportionally */
 	}
 
 	.banner-header {
