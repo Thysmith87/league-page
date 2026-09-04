@@ -67,7 +67,7 @@
 	}
 
 	.sidebar .banner-title {
-		font-size: 1.3em;
+		font-size: 1.1em;
 	}
 
 	.banner-count {
@@ -92,7 +92,8 @@
 	}
 
 	.sidebar .roster-section {
-		padding: 10px 12px;
+		padding: 8px 10px;
+		margin-bottom: 10px;
 	}
 
 	.roster-section:last-child {
@@ -114,8 +115,8 @@
 	}
 
 	.sidebar .team-avatar {
-		width: 28px;
-		height: 28px;
+		width: 24px;
+		height: 24px;
 	}
 
 	.team-name {
