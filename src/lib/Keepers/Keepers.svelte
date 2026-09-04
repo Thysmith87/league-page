@@ -70,12 +70,20 @@
 		}
 
 		.sidebar-column {
-			flex: 0 0 320px;
+			flex: 0 0 260px;
+		}
+
+		.sidebar-column :global(.banner-container.sidebar) {
+			position: fixed;
+			top: 20px;
+			width: 260px;
+			max-height: calc(100vh - 40px);
 		}
 
 		.main-column {
 			flex: 1 1 auto;
-			min-width: 0; /* prevents flex overflow issues */
+			min-width: 0;
+			margin-left: 280px; /* sidebar width (260px) + gap (20px) */
 		}
 	}
 </style>
