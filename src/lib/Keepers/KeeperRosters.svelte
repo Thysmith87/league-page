@@ -72,7 +72,8 @@
 
 	$: record = buildRecord(roster);
 
-	const toggleOpen = () => {
+	const toggleOpen = (event) => {
+		event.stopPropagation();
 		isOpen = !isOpen;
 	};
 </script>
@@ -141,9 +142,9 @@
 							<img alt="team avatar" class="teamAvatar" src="{team ? team.avatar : 'https://sleepercdn.com/images/v2/icons/player_default.webp'}" />
 							<h3 class="team-name-text">{team?.name || 'No Manager'}</h3>
 						</div>
-						<button class="toggle-btn" onclick|stopPropagation={toggleOpen}>
-							{isOpen ? 'Hide roster ▲' : 'Show roster ▼'}
-						</button>
+							<button class="toggle-btn" onclick={toggleOpen}>
+								{isOpen ? 'Hide roster ▲' : 'Show roster ▼'}
+							</button>
 					</div>
 					<div class="record">
 						{#each record as result}
