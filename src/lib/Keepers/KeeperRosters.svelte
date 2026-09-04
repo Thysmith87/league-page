@@ -1,36 +1,28 @@
+<!-- src/lib/Keepers/KeeperRosters.svelte -->
 <script>
 	import { gotoManager } from '$lib/utils/helper';
-  	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
+	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
 	import { Icon } from '@smui/icon-button';
 	import RosterRow from "./KeeperRow.svelte";
-	import { onMount } from 'svelte';
 
 	// Props passed from loader
 	export let roster;
 	export let leagueTeamManagers;
 	export let players;
-	export let keeperData = []; // Array of { playerId, keeperCost, eligibility }
+	export let keeperData = [];
+	export let expanded = false; // Global expand/collapse-all control from KeeperSorter
 
-	let isMobile = false;
+	let isOpen = expanded; // Individual team's own toggle state
 
-	onMount(() => {
-		const checkMobile = () => {
-			isMobile = window.innerWidth <= 768;
-		};
-		
-		checkMobile();
-		window.addEventListener('resize', checkMobile);
-		
-		return () => {
-			window.removeEventListener('resize', checkMobile);
-		};
-	});
+	// Keep individual state in sync when "Expand/Minimize All" is clicked
+	$: isOpen = expanded;
 
 	$: team = leagueTeamManagers.teamManagersMap[leagueTeamManagers.currentSeason][roster.roster_id].team;
 
 	// Flatten all players (starters + bench + reserve) into one array
 	const digestData = (passedPlayers, rawPlayers) => {
 		let digestedRoster = [];
+
 		for (const singlePlayer of rawPlayers) {
 			let injury = null;
 			switch (passedPlayers[singlePlayer]?.is) {
@@ -39,14 +31,13 @@
 				case "PUP": injury = "PUP"; break;
 				case "IR": injury = "IR"; break;
 			}
-			// pull keeper data (including previousDraftRound now)
+
 			const keeperInfo = keeperData.find(k => k.playerId === singlePlayer) || {};
-			// always set eligibility color (even red for ineligible)
+
 			const eligibilityColor =
 				keeperInfo.eligibility === "green" ? "background-color: lightgreen" :
 				keeperInfo.eligibility === "yellow" ? "background-color: gold" :
-				"background-color: lightcoral"; // default red
-
+				"background-color: lightcoral";
 			digestedRoster.push({
 				id: singlePlayer,
 				name: `${passedPlayers[singlePlayer]?.fn || ''} ${passedPlayers[singlePlayer]?.ln || ''}${injury ? ` (${injury})` : ""}`,
@@ -60,6 +51,7 @@
 				eligibilityStyle: eligibilityColor
 			});
 		}
+
 		return digestedRoster;
 	};
 
@@ -77,310 +69,89 @@
 			}
 		}
 		return innerRecord;
-}
+	};
 
 	$: record = buildRecord(roster);
-	
+
+	const toggleOpen = () => {
+		isOpen = !isOpen;
+	};
 </script>
 
 <style>
-	.team {
-		margin-bottom: 1rem;
-		border: 1px solid #e0e0e0;
-		border-radius: 8px;
-		overflow: hidden;
-	}
-
-	.team-header {
-		background-color: #f5f5f5;
-		padding: 0.75rem 1rem;
-		border-bottom: 1px solid #e0e0e0;
-		cursor: pointer;
-		transition: background-color 0.2s ease;
-	}
-
-	.team-header:hover {
-		background-color: #eeeeee;
-	}
-
-	.team-info {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	.team-name-section {
-		display: flex;
-		align-items: center;
-	}
-
-	.team-avatar {
-		width: 32px;
-		height: 32px;
+	.teamAvatar {
+		vertical-align: middle;
 		border-radius: 50%;
-		margin-right: 0.75rem;
-		border: 1px solid #ccc;
-		object-fit: cover;
+		height: 40px;
+		margin-right: 15px;
+		border: 0.25px solid #777;
 	}
-
-	.team-name {
-		margin: 0;
-		font-size: 1.1rem;
-		font-weight: 600;
-		color: #333;
-	}
-
 	.record {
 		display: flex;
-		gap: 2px;
+		justify-content: space-around;
+		margin-top: 5px;
 	}
-
-	.result {
-		width: 10px;
-		height: 10px;
-		border-radius: 2px;
+	.result { width: 11px; }
+	.clickable {
+		cursor: pointer;
 	}
-
-	:global(.team .mdc-data-table) {
-		border: none;
-		box-shadow: none;
+	.chevron {
+		display: inline-block;
+		transition: transform 0.2s ease;
+		margin-left: 8px;
+		font-size: 0.8em;
 	}
-
-	:global(.team .mdc-data-table__table) {
-		width: 100%;
+	.chevron.open {
+		transform: rotate(180deg);
 	}
-
-	:global(.team .mdc-data-table__header-row) {
-		height: 40px;
-		background-color: #fafafa;
-	}
-
-	:global(.team .mdc-data-table__row) {
-		height: 36px;
-		border-bottom: 1px solid #f0f0f0;
-	}
-
-	:global(.team .mdc-data-table__row:last-child) {
-		border-bottom: none;
-	}
-
-	:global(.team .mdc-data-table__cell) {
-		padding: 8px 12px;
-		font-size: 0.875rem;
-		vertical-align: middle;
-	}
-
-	/* Specific column widths for better space allocation */
-	:global(.team .mdc-data-table__cell:nth-child(1)) {
-		width: 40%;
-		min-width: 120px;
-	}
-
-	:global(.team .mdc-data-table__cell:nth-child(2)) {
-		width: 15%;
-		min-width: 50px;
-	}
-
-	:global(.team .mdc-data-table__cell:nth-child(3)) {
-		width: 15%;
-		min-width: 50px;
-	}
-
-	:global(.team .mdc-data-table__cell:nth-child(4)) {
-		width: 20%;
-		min-width: 60px;
-	}
-
-	:global(.team .mdc-data-table__cell:nth-child(5)) {
-		width: 10%;
-		min-width: 40px;
-	}
-
-	:global(.team .mdc-data-table__header-cell) {
-		padding: 8px 12px;
-		font-size: 0.8rem;
-		font-weight: 600;
-		text-transform: uppercase;
-		color: #666;
-		letter-spacing: 0.5px;
-	}
-
-	.player-cell {
+	.team-header-row {
 		display: flex;
 		align-items: center;
-		min-width: 0;
-	}
-
-	.player-info {
-		min-width: 0;
-		flex: 1;
-	}
-
-	.player-details-mobile {
-		font-size: 0.7rem;
-		color: #888;
-		margin-top: 2px;
-	}
-
-	.pos-mobile, .team-mobile {
-		margin-right: 8px;
-	}
-
-	.pos-mobile {
-		font-weight: 600;
-		color: #666;
-	}
-
-	.player-avatar {
-		width: 24px;
-		height: 24px;
-		border-radius: 50%;
-		margin-right: 8px;
-		background-size: cover;
-		background-position: center;
-		flex-shrink: 0;
-		border: 1px solid #ddd;
-	}
-
-	.player-name {
-		font-size: 0.875rem;
-		line-height: 1.2;
-		overflow: hidden;
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-		word-break: break-word;
-		hyphens: auto;
-	}
-
-	/* Mobile-specific adjustments */
-	@media (max-width: 768px) {
-		.player-name {
-			font-size: 0.8rem;
-		}
-		
-		.player-avatar {
-			width: 20px;
-			height: 20px;
-			margin-right: 6px;
-		}
-		
-		:global(.team .mdc-data-table__cell) {
-			padding: 6px 8px;
-		}
-		
-		/* Make player column take more space */
-		.player-cell {
-			min-width: 0;
-			flex: 1;
-		}
-
-		/* Adjust column widths for mobile - only 3 columns now */
-		:global(.team .mdc-data-table__cell:nth-child(1)) {
-			width: 60%;
-			min-width: 140px;
-		}
-
-		:global(.team .mdc-data-table__cell:nth-child(2)) {
-			width: 25%;
-			min-width: 60px;
-		}
-
-		:global(.team .mdc-data-table__cell:nth-child(3)) {
-			width: 15%;
-			min-width: 40px;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.player-name {
-			font-size: 0.75rem;
-			-webkit-line-clamp: 1;
-		}
-	}
-
-	.pos-cell {
-		font-weight: 600;
-		font-size: 0.8rem;
-		color: #666;
-	}
-
-	.team-cell {
-		font-size: 0.8rem;
-		color: #888;
-	}
-
-	.draft-round-cell {
-		font-size: 0.875rem;
-		text-align: center;
-	}
-
-	.eligibility-cell {
-		width: 20px;
-		height: 20px;
-		border-radius: 50%;
-		margin: 0 auto;
+		justify-content: center;
 	}
 </style>
 
 <div class="team">
-	<div class="team-header" on:click={() => gotoManager({leagueTeamManagers, rosterID: roster.roster_id})}>
-		<div class="team-info">
-			<div class="team-name-section">
-				<img 
-					alt="team avatar" 
-					class="team-avatar" 
-					src="{team ? team.avatar : 'https://sleepercdn.com/images/v2/icons/player_default.webp'}" 
-				/>
-				<h3 class="team-name">{team?.name || 'No Manager'}</h3>
-			</div>
-			<div class="record">
-				{#each record as result}
-					<div class="result" style="background-color: {result === 'green' ? '#4caf50' : result === 'red' ? '#f44336' : '#9e9e9e'}"></div>
-				{/each}
-			</div>
-		</div>
-	</div>
-
-	<DataTable class="teamInner" table$aria-label="Team Roster" style="width: 100%;">
+	<DataTable class="teamInner" table$aria-label="Team Name" style="width: 100%;">
 		<Head>
 			<Row>
-				<Cell>Player</Cell>
-				{#if !isMobile}
+				<Cell colspan=5 class="clickable" on:click={toggleOpen}>
+					<div class="team-header-row">
+						<h3 on:click|stopPropagation={() => gotoManager({leagueTeamManagers, rosterID: roster.roster_id})}>
+							<img alt="team avatar" class="teamAvatar" src="{team ? team.avatar : 'https://sleepercdn.com/images/v2/icons/player_default.webp'}" />
+							{team?.name || 'No Manager'}
+						</h3>
+						<span class="chevron" class:open={isOpen}>▼</span>
+					</div>
+					<div class="record">
+						{#each record as result}
+							<img alt="match result" class="result" src="/{result}.png" />
+						{/each}
+					</div>
+				</Cell>
+			</Row>
+			{#if isOpen}
+				<Row>
+					<Cell>Player</Cell>
 					<Cell>Pos</Cell>
 					<Cell>Team</Cell>
-				{/if}
-				<Cell>Draft Round</Cell>
-				<Cell>Eligible</Cell>
-			</Row>
-		</Head>
-		<Body>
-			{#each fullRoster as p}
-				<Row>
-					<Cell>
-						<div class="player-cell">
-							<div class="player-avatar" style="{p.avatar}"></div>
-							<div class="player-info">
-								<div class="player-name">{p.name}</div>
-								{#if isMobile}
-									<div class="player-details-mobile">
-										<span class="pos-mobile">{p.poss}</span>
-										<span class="team-mobile">{p.team}</span>
-									</div>
-								{/if}
-							</div>
-						</div>
-					</Cell>
-					{#if !isMobile}
-						<Cell><span class="pos-cell">{p.poss}</span></Cell>
-						<Cell><span class="team-cell">{p.team}</span></Cell>
-					{/if}
-					<Cell><span class="draft-round-cell">{p.previousDraftRound}</span></Cell>
-					<Cell>
-						<div class="eligibility-cell" style="{p.eligibilityStyle}"></div>
-					</Cell>
+					<Cell>Keeper Draft Round</Cell>
+					<Cell>Eligibility</Cell>
 				</Row>
-			{/each}
-		</Body>
+			{/if}
+		</Head>
+		{#if isOpen}
+			<Body>
+				{#each fullRoster as p}
+					<Row>
+						<Cell><div style="background:{p.avatar}">{p.name}</div></Cell>
+						<Cell>{p.poss}</Cell>
+						<Cell>{p.team}</Cell>
+						<Cell>{p.previousDraftRound}</Cell>
+						<Cell style={p.eligibilityStyle}></Cell>
+					</Row>
+				{/each}
+			</Body>
+		{/if}
 	</DataTable>
 </div>
