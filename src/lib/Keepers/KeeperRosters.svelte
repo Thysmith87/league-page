@@ -115,10 +115,13 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		word-break: keep-all;
 		font-size: 15px;
 		font-weight: 600;
 		margin: 0;
 		line-height: 1.2;
+		display: block;
+		max-width: 100%;
 	}
 
 	.toggle-btn {
