@@ -7,8 +7,7 @@ export const enableBlog = false; // requires VITE_CONTENTFUL_ACCESS_TOKEN and VI
 
 /*   STEP 2   */
 export const homepageText = `
-  <p>TRADE DEADLINE IS DEC 2nd.</p> 
-  <p>Good luck in your final push to the playoffs.</p> 
+  <p>Draft Complete Good Luck!</p>  
 `;
 
 /*   STEP 3   */
